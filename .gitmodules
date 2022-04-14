@@ -1,0 +1,12 @@
+[submodule "nft-marketplace-server"]
+	path = nft-marketplace-server
+	url = https://github.com/mlabs-haskell/nft-marketplace-server
+[submodule "ogmios-datum-cache"]
+	path = ogmios-datum-cache
+	url = https://github.com/mlabs-haskell/ogmios-datum-cache
+[submodule "cardano-transaction-lib"]
+	path = cardano-transaction-lib
+	url = https://github.com/Plutonomicon/cardano-transaction-lib
+[submodule "nft-marketplace"]
+	path = nft-marketplace
+	url = https://github.com/mlabs-haskell/nft-marketplace

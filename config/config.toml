@@ -1,0 +1,11 @@
+dbConnectionString = "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
+
+saveAllDatums = true
+
+server.port = 9999
+
+ogmios.address = "ogmios"
+ogmios.port = 1337
+
+firstFetchBlock.slot = 44366242
+firstFetchBlock.id = "d2a4249fe3d0607535daa26caf12a38da2233586bc51e79ed0b3a36170471bf5"
