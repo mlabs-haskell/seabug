@@ -6,19 +6,23 @@ let
   ogmios-datum-cache = (pkgs.callPackage (import ogmios-datum-cache/release.nix)
     { }).ogmios-datum-cache;
   cardano-transaction-lib-server = (import
-    cardano-transaction-lib/default.nix).packages.x86_64-linux."ctl-server:exe:ctl-server";
+    cardano-transaction-lib/default.nix).packages.x86_64-linux."cardano-browser-tx-server:exe:cardano-browser-tx-server";
 in {
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
   config.services = {
     nft-marketplace.service = {
-      build.context = "nft-marketplace/.";
       depends_on =
         [ "cardano-transaction-lib-server" "nft-marketplace-server" ];
+      image = "nginx:1.20.2-alpine";
       ports = [ "8080:80" ];
+      volumes = [
+        "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
+        "${toString ./.}/config/nginx.conf:/etc/nginx/nginx.conf"
+      ];
     };
     cardano-transaction-lib-server.service = {
-      command = [ "${cardano-transaction-lib-server}/bin/ctl-server" ];
+      command = [ "${cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
       ports = [ "8081:8081" ];
       useHostStore = true;
     };
@@ -45,7 +49,7 @@ in {
       depends_on = [ "ogmios" "postgresql-db" "nft-marketplace-server" ];
       ports = [ "9999:9999" ];
       useHostStore = true;
-      volumes = [ "${toString ./.}/config:/config" ];
+      volumes = [ "${toString ./.}/config/datum-cache-config.toml:/config/config.toml" ];
       working_dir = "/config";
       restart = "always";
     };

@@ -4,6 +4,7 @@
 
 - nix
 - [arion](https://docs.hercules-ci.com/arion/#_installation)
+- [nami wallet](https://namiwallet.io/) installed as browser extension
 
 ## Usage
 
@@ -23,8 +24,8 @@ If you want to use nft.storage as image storage backend, replace `NFT_STORAGE_KE
 - If you have node db you can copy it to `data/cardano-node/cardano-node-data` to save hours on initial sync.
 
 ```bash
+$ ./buildFrontend.sh
 $ arion up
-$ # Instructions how to run frontend here
 ```
 
 ## Components
