@@ -6,7 +6,7 @@ cd npm-packages/cardano-transaction-lib-seabug
 npm install
 cd ../../..
 # This is a replacement of npm link. npm link is problematic on immutable file systems
-rm nft-marketplace/node_modules/cardano-transaction-lib-seabug
+rm -f nft-marketplace/node_modules/cardano-transaction-lib-seabug
 ln -s $PWD/cardano-transaction-lib/npm-packages/cardano-transaction-lib-seabug\
       $PWD/nft-marketplace/node_modules/cardano-transaction-lib-seabug
 cd nft-marketplace
