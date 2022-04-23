@@ -69,6 +69,7 @@ in {
         POSTGRES_DB = "seabug";
       };
       image = "postgres:14";
+      ports = [ "5432:5432" ];
       volumes =
         [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
     };
@@ -84,6 +85,8 @@ in {
       ports = [ "8008:9999" ];
       useHostStore = true;
       restart = "always";
+      volumes =
+        [ "${toString ./.}/config/tmp:/tmp" ];
     };
   };
 }
