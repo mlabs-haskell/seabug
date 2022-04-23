@@ -15,6 +15,12 @@
 $ git clone --recurse-submodules git@github.com:mlabs-haskell/seabug.git
 ```
 
+### Enter nix shell
+
+```shell
+$ nix develop
+```
+
 ### Setup `nft.storage` key
 
 Replace `NFT_STORAGE_KEY_HERE` in `arion-compose.nix` with your key. You can obtain free API key from [nft.storage](https://nft.storage/).
