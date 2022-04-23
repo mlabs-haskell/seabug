@@ -22,7 +22,8 @@ in {
       ];
     };
     cardano-transaction-lib-server.service = {
-      command = [ "${cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
+      command =
+        [ "${cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
       ports = [ "8081:8081" ];
       useHostStore = true;
     };
@@ -49,7 +50,9 @@ in {
       depends_on = [ "ogmios" "postgresql-db" "nft-marketplace-server" ];
       ports = [ "9999:9999" ];
       useHostStore = true;
-      volumes = [ "${toString ./.}/config/datum-cache-config.toml:/config/config.toml" ];
+      volumes = [
+        "${toString ./.}/config/datum-cache-config.toml:/config/config.toml"
+      ];
       working_dir = "/config";
       restart = "always";
     };
@@ -85,8 +88,7 @@ in {
       ports = [ "8008:9999" ];
       useHostStore = true;
       restart = "always";
-      volumes =
-        [ "${toString ./.}/config/tmp:/tmp" ];
+      volumes = [ "${toString ./.}/config/tmp:/tmp" ];
     };
   };
 }
