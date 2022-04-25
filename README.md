@@ -131,7 +131,8 @@ $ arion up
 ### Start ogmios-datum-cache block fetcher
 
 ```shell
-$ curl --location --request POST 'localhost:9999/control/fetch_blocks'\
+$ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
+    --header 'Content-Type: application/json' \
     --data-raw '
      {
        "slot": 44366242,
