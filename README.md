@@ -109,6 +109,20 @@ $ ./buildFrontend.sh
 $ arion up
 ```
 
+### Start ogmios-datum-cache block fetcher
+
+```shell
+$ curl --location --request POST 'localhost:9999/control/fetch_blocks'\
+    --data-raw '
+     {
+       "slot": 44366242,
+       "id": "d2a4249fe3d0607535daa26caf12a38da2233586bc51e79ed0b3a36170471bf5"
+     }
+    '
+```
+
+Detaild block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
+
 ## Components
 
 ### `nft-marketplace`
