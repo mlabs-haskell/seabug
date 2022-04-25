@@ -7,6 +7,7 @@ npm install
 cd ../../..
 # This is a replacement of npm link. npm link is problematic on immutable file systems
 rm -f nft-marketplace/node_modules/cardano-transaction-lib-seabug
+mkdir -p $PWD/nft-marketplace/node_modules/
 ln -s $PWD/cardano-transaction-lib/npm-packages/cardano-transaction-lib-seabug\
       $PWD/nft-marketplace/node_modules/cardano-transaction-lib-seabug
 cd nft-marketplace
@@ -31,4 +32,5 @@ REACT_APP_CTL_PROJECT_ID=testnetu7qDM8q2XT1S6gEBSicUIqXB6QN60l7B
 
 REACT_APP_IPFS_BASE_URL=https://cloudflare-ipfs.com/ipfs/
 EOT
+npm install
 npm run build
