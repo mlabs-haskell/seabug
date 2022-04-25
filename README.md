@@ -1,5 +1,24 @@
 # Seabug
 
+- [Prerequisites](#prerequisites)
+- [Usage](#usage)
+  * [Clone repo](#clone-repo)
+  * [Enter nix shell](#enter-nix-shell)
+  * [Setup `nft.storage` key](#setup--nftstorage--key)
+  * [Optional: Copy testnet node database](#optional--copy-testnet-node-database)
+  * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
+  * [Start services](#start-services)
+  * [Start ogmios-datum-cache block fetcher](#start-ogmios-datum-cache-block-fetcher)
+- [Components](#components)
+  * [`nft-marketplace`](#-nft-marketplace-)
+  * [`ogmios-datum-cache`](#-ogmios-datum-cache-)
+  * [`ogmios`](#-ogmios-)
+  * [`postgresql`](#-postgresql-)
+  * [`nft-marketplace-server`](#-nft-marketplace-server-)
+  * [`cardano-transaction-lib-server`](#-cardano-transaction-lib-server-)
+  * [`cardano-node`](#-cardano-node-)
+  * [Onchain SmartContracts](#onchain-smartcontracts)
+
 ## Prerequisites
 
 - nix
