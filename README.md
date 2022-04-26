@@ -109,6 +109,12 @@ $ ./buildFrontend.sh
 $ arion up
 ```
 
+please note that `arion up` will require a full cardano node to sync, which can take some time.  At time of writing (April, 2022), the current tip is at slot 56000000 and counting.
+
+Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
+
+Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
+
 ## Components
 
 ### `nft-marketplace`
