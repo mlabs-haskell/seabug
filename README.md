@@ -147,7 +147,7 @@ $ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
     '
 ```
 
-Detaild block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
+Detailed block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
 
 ## Components
 
