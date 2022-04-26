@@ -6,7 +6,7 @@ cd npm-packages/cardano-transaction-lib-seabug
 npm install
 cd ../../..
 # This is a replacement of npm link. npm link is problematic on immutable file systems
-rm -f nft-marketplace/node_modules/cardano-transaction-lib-seabug
+rm -rf nft-marketplace/node_modules/cardano-transaction-lib-seabug
 mkdir -p $PWD/nft-marketplace/node_modules/
 ln -s $PWD/cardano-transaction-lib/npm-packages/cardano-transaction-lib-seabug\
       $PWD/nft-marketplace/node_modules/cardano-transaction-lib-seabug
@@ -24,7 +24,7 @@ REACT_APP_CTL_SERVER_SECURE_CONN=false
 REACT_APP_CTL_OGMIOS_HOST=localho.st
 REACT_APP_CTL_OGMIOS_PORT=1337
 REACT_APP_CTL_OGMIOS_SECURE_CONN=false
-REACT_APP_CTL_DATUM_CACHE_HOST=locaho.st
+REACT_APP_CTL_DATUM_CACHE_HOST=localho.st
 REACT_APP_CTL_DATUM_CACHE_PORT=9999
 REACT_APP_CTL_DATUM_CACHE_SECURE_CONN=false
 REACT_APP_CTL_NETWORK_ID=0
