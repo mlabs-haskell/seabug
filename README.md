@@ -128,6 +128,13 @@ $ ./buildFrontend.sh
 $ arion up
 ```
 
+please note that `arion up` will require a full cardano node to sync, which can take some time.  At time of writing (April, 2022), the current tip is at slot 56000000 and counting.
+
+Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
+
+Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
+
+
 ### Start ogmios-datum-cache block fetcher
 
 ```shell
@@ -141,7 +148,8 @@ $ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
     '
 ```
 
-Detaild block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
+Detailed block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
+
 
 ## Components
 
