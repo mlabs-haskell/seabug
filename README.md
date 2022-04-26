@@ -6,9 +6,9 @@
   * [Enter nix shell](#enter-nix-shell)
   * [Setup `nft.storage` key](#setup--nftstorage--key)
   * [Optional: Copy testnet node database](#optional--copy-testnet-node-database)
-  * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
   * [Start services](#start-services)
   * [Start ogmios-datum-cache block fetcher](#start-ogmios-datum-cache-block-fetcher)
+  * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
 - [Components](#components)
   * [`nft-marketplace`](#-nft-marketplace-)
   * [`ogmios-datum-cache`](#-ogmios-datum-cache-)
@@ -51,6 +51,37 @@ If you have node db you can copy it to `data/cardano-node/cardano-node-data` to 
 $ mkdir -p data/cardano-node/cardano-node-data
 $ cp -r /path/to/old/db data/cardano-node/cardano-node-data/.
 ```
+
+### Start services
+
+```shell
+$ ./buildFrontend.sh
+$ arion up
+```
+
+Please note that `arion up` will require a full cardano node to sync, which can take some time.  At time of writing (April, 2022), the current tip is at slot 56000000 and counting.
+
+Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
+
+Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
+
+
+### Start ogmios-datum-cache block fetcher
+
+Necessary untill [#20](https://github.com/mlabs-haskell/ogmios-datum-cache/issues/20) is implemented.
+
+```shell
+$ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
+    --header 'Content-Type: application/json' \
+    --data-raw '
+     {
+       "slot": 44366242,
+       "id": "d2a4249fe3d0607535daa26caf12a38da2233586bc51e79ed0b3a36170471bf5"
+     }
+    '
+```
+
+Detaild block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
 
 ### Optional: Mint your own NFTs
 
@@ -120,36 +151,6 @@ $ curl --location --request POST 'localhost:3003/api/contract/activate'
 $ cd ../cardano-transaction-lib
 $ # Replace value of "mintingPolicy1" in seabug_contracts/MintingPolicy.js with policy noted from BPI
 ```
-
-### Start services
-
-```shell
-$ ./buildFrontend.sh
-$ arion up
-```
-
-please note that `arion up` will require a full cardano node to sync, which can take some time.  At time of writing (April, 2022), the current tip is at slot 56000000 and counting.
-
-Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
-
-Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
-
-
-### Start ogmios-datum-cache block fetcher
-
-```shell
-$ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
-    --header 'Content-Type: application/json' \
-    --data-raw '
-     {
-       "slot": 44366242,
-       "id": "d2a4249fe3d0607535daa26caf12a38da2233586bc51e79ed0b3a36170471bf5"
-     }
-    '
-```
-
-Detailed block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
-
 
 ## Components
 
