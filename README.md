@@ -1,5 +1,24 @@
 # Seabug
 
+- [Prerequisites](#prerequisites)
+- [Usage](#usage)
+  * [Clone repo](#clone-repo)
+  * [Enter nix shell](#enter-nix-shell)
+  * [Setup `nft.storage` key](#setup--nftstorage--key)
+  * [Optional: Copy testnet node database](#optional--copy-testnet-node-database)
+  * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
+  * [Start services](#start-services)
+  * [Start ogmios-datum-cache block fetcher](#start-ogmios-datum-cache-block-fetcher)
+- [Components](#components)
+  * [`nft-marketplace`](#-nft-marketplace-)
+  * [`ogmios-datum-cache`](#-ogmios-datum-cache-)
+  * [`ogmios`](#-ogmios-)
+  * [`postgresql`](#-postgresql-)
+  * [`nft-marketplace-server`](#-nft-marketplace-server-)
+  * [`cardano-transaction-lib-server`](#-cardano-transaction-lib-server-)
+  * [`cardano-node`](#-cardano-node-)
+  * [Onchain SmartContracts](#onchain-smartcontracts)
+
 ## Prerequisites
 
 - nix
@@ -114,6 +133,21 @@ please note that `arion up` will require a full cardano node to sync, which can 
 Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
 
 Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
+
+### Start ogmios-datum-cache block fetcher
+
+```shell
+$ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
+    --header 'Content-Type: application/json' \
+    --data-raw '
+     {
+       "slot": 44366242,
+       "id": "d2a4249fe3d0607535daa26caf12a38da2233586bc51e79ed0b3a36170471bf5"
+     }
+    '
+```
+
+Detaild block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
 
 ## Components
 
