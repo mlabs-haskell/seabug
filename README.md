@@ -37,7 +37,7 @@ $ git clone --recurse-submodules git@github.com:mlabs-haskell/seabug.git
 ### Enter nix shell
 
 ```shell
-$ nix develop
+$ nix develop --extra-experimental-features nix-command --extra-experimental-features flakes
 ```
 
 ### Setup `nft.storage` key
