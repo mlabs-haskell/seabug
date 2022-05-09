@@ -21,6 +21,7 @@
 ## Prerequisites
 
 - nix
+- [IOHK binary cache](https://github.com/input-output-hk/plutus#how-to-set-up-the-iohk-binary-caches)
 - arion - Use patched one from `nix develop`!
 - [nami wallet](https://namiwallet.io/) installed as browser extension
 - Funds in wallet obtained from [faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
