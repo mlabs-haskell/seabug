@@ -7,7 +7,6 @@
   * [Setup `nft.storage` key](#setup--nftstorage--key)
   * [Optional: Copy testnet node database](#optional--copy-testnet-node-database)
   * [Start services](#start-services)
-  * [Start ogmios-datum-cache block fetcher](#start-ogmios-datum-cache-block-fetcher)
   * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
 - [Components](#components)
   * [`nft-marketplace`](#-nft-marketplace-)
@@ -65,24 +64,6 @@ Once the chain is synced, you should be able to view the dApp UI from `localhost
 
 Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
 
-
-### Start ogmios-datum-cache block fetcher
-
-Necessary untill [#20](https://github.com/mlabs-haskell/ogmios-datum-cache/issues/20) is implemented.
-
-```shell
-$ curl --location --request POST 'localhost:9999/control/fetch_blocks' -i\
-    --header 'Content-Type: application/json' \
-    --data-raw '
-     {
-       "slot": 44366242,
-       "id": "d2a4249fe3d0607535daa26caf12a38da2233586bc51e79ed0b3a36170471bf5"
-     }
-    '
-```
-
-Detaild block fetcher api is described [here](https://github.com/mlabs-haskell/ogmios-datum-cache/tree/9e8bcbe00f88715afdb202cd9654ec2adc72c09e#control-api).
-
 ### Optional: Mint your own NFTs
 
 This process will be simplified in the future.
@@ -123,19 +104,21 @@ $ nix develop -L -c cabal run efficient-nft-pab
 
 $ # In other console
 $ # Mint underlying CNFTs, replace "CONVERTED_CID" with the result of `ipfs` command
-$ curl --location --request POST 'localhost:3003/api/contract/activate'
+$ curl --location --request POST 'localhost:3003/api/contract/activate' \
     --header 'Content-Type: application/json' \
     --data-raw '
      {
-        "tag":"MintCnft",
-        "contents":[
-           {
-              "mc'"'"'name":"Cat number 123",
-              "mc'"'"'description":"Cat eating piece of cheese",
-              "mc'"'"'image":"ipfs://CONVERTED_CID",
-              "mc'"'"'tokenName":"cat-123"
-           }
-        ]
+        "caID": {
+            "tag":"MintCnft",
+            "contents":[
+               {
+                  "mc'"'"'name":"Cat number 123",
+                  "mc'"'"'description":"Cat eating piece of cheese",
+                  "mc'"'"'image":"ipfs://CONVERTED_CID",
+                  "mc'"'"'tokenName":"cat-123" # This should be hex encoded (without 0x)
+               }
+            ]
+        }
      }'
 
 $ # Go back to previous terminal and stop BPI
