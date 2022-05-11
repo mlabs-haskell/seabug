@@ -13,8 +13,8 @@
     };
 
     cardano-transaction-lib = {
-      url = "github:Plutonomicon/cardano-transaction-lib";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:Plutonomicon/cardano-transaction-lib/seabug-deployment";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nft-marketplace = {
@@ -29,7 +29,7 @@
 
     ogmios-datum-cache = {
       url = "github:mlabs-haskell/ogmios-datum-cache";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
       # flake = false;
     };
 
@@ -66,11 +66,10 @@
     } //
     flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = import nixpkgs
-        {
-          overlays = [ self.overlay ];
-          inherit system;
-        };
+      pkgs = import nixpkgs {
+        overlays = [ self.overlay ];
+        inherit system;
+      };
     in
     rec {
       devShell = pkgs.mkShell {
@@ -89,7 +88,15 @@
         inherit system;
         modules = [
           nixosModules.default
-          ({ ... }: { services.seabug.enable = true; })
+          ({ pkgs, ... }: {
+            services.seabug.enable = true;
+            users.users.root.password = "toor";
+            users.mutableUsers = false;
+            environment.systemPackages = with pkgs; [
+              htop
+              curl
+            ];
+          })
         ];
       };
     });
