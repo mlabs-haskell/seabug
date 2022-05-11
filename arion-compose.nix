@@ -1,12 +1,12 @@
 { pkgs, ... }:
 let
-  nft-marketplace-server =
-    (pkgs.callPackage (import nft-marketplace-server/release.nix)
-      { nixpkgs = pkgs; }).nft-marketplace-server;
-  ogmios-datum-cache = (pkgs.callPackage (import ogmios-datum-cache/release.nix)
-    { nixpkgs = pkgs;}).ogmios-datum-cache;
-  cardano-transaction-lib-server = (import
-    cardano-transaction-lib/default.nix).packages.x86_64-linux."cardano-browser-tx-server:exe:cardano-browser-tx-server";
+  # nft-marketplace-server =
+  #   (pkgs.callPackage (import nft-marketplace-server/release.nix)
+  #     { nixpkgs = pkgs; }).nft-marketplace-server;
+  # ogmios-datum-cache = (pkgs.callPackage (import ogmios-datum-cache/release.nix)
+  #   { nixpkgs = pkgs;}).ogmios-datum-cache;
+  # cardano-transaction-lib-server = (import
+  #   cardano-transaction-lib/default.nix).packages.x86_64-linux."cardano-browser-tx-server:exe:cardano-browser-tx-server";
 in {
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
@@ -44,7 +44,7 @@ in {
     };
     cardano-transaction-lib-server.service = {
       command =
-        [ "${cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
+        [ "${pkgs.cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
       ports = [ "8081:8081" ];
       useHostStore = true;
     };
@@ -66,7 +66,7 @@ in {
       ];
     };
     ogmios-datum-cache.service = {
-      command = [ "${ogmios-datum-cache}/bin/ogmios-datum-cache" ];
+      command = [ "${pkgs.ogmios-datum-cache}/bin/ogmios-datum-cache" ];
       depends_on = {
         ogmios.condition = "service_healthy";
         postgresql-db.condition = "service_healthy";
@@ -117,7 +117,7 @@ in {
     };
     nft-marketplace-server.service = {
       command = [
-        "${nft-marketplace-server}/bin/nft-marketplace-server"
+        "${pkgs.nft-marketplace-server}/bin/nft-marketplace-server"
         "--db-connection"
         "postgresql://seabug:seabug@postgresql-db:5432/seabug"
         "--nft-storage-key"

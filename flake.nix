@@ -32,6 +32,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
       # flake = false;
     };
+
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
   };
   outputs =
     { self
@@ -60,18 +65,24 @@
         };
     } //
     flake-utils.lib.eachDefaultSystem (system:
-    let pkgs = nixpkgs.legacyPackages.${system};
+    let
+      pkgs = import nixpkgs
+        {
+          overlays = [ self.overlay ];
+          inherit system;
+        };
     in
     rec {
       devShell = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; [
-          postgresql
-          jq
-          curl
-          ipfs
-          cardano-node.packages.${system}.cardano-cli
-          arion.packages.${system}.arion
-        ];
+        nativeBuildInputs = with pkgs;
+          [
+            postgresql
+            jq
+            curl
+            ipfs
+            cardano-node.packages.${system}.cardano-cli
+            arion.packages.${system}.arion
+          ];
       };
       nixosModules.default = import ./nixos-module.nix inputs;
       nixosConfigurations.test = nixpkgs.lib.nixosSystem {
@@ -79,7 +90,6 @@
         modules = [
           nixosModules.default
           ({ ... }: { services.seabug.enable = true; })
-
         ];
       };
     });

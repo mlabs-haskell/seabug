@@ -1,4 +1,4 @@
-{ arion, ... }:
+{ arion, self, ... }@inputs:
 
 { lib, config, ... }:
 
@@ -17,7 +17,9 @@ let cfg = config.services.seabug; in
     arion.nixosModules.arion
   ];
 
+
   config = mkIf cfg.enable {
+    nixpkgs.overlays = [ self.overlay ];
     virtualisation.arion = {
       backend = "podman-socket";
       projects.seabug.settings.imports = [ ./arion-compose.nix ];

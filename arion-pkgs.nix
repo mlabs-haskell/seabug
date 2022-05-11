@@ -1,4 +1,15 @@
-import <nixpkgs> {
-  system = "x86_64-linux";
-  # overlays = [ (import ./overlay) ];
+let flake = (import
+  (
+    let lock = builtins.fromJSON (builtins.readFile ./flake.lock); in
+    fetchTarball {
+      url = "https://github.com/edolstra/flake-compat/archive/${lock.nodes.flake-compat.locked.rev}.tar.gz";
+      sha256 = lock.nodes.flake-compat.locked.narHash;
+    }
+  )
+  { src = ./.; }
+);
+in
+import (flake.inputs.nixpkgs) {
+  systeem = "x86-64_linux";
+  overlays = [ flake.overlay ];
 }
