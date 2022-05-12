@@ -71,22 +71,22 @@
     } //
     flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = import nixpkgs {
-        overlays = [ self.overlay ];
-        inherit system;
-      };
+      pkgs = nixpkgs.legacyPackages.${system}.extend self.overlay;
     in
     rec {
-      devShell = pkgs.mkShell {
-        nativeBuildInputs = with pkgs;
-          [
-            postgresql
-            jq
-            curl
-            ipfs
-            cardano-node.packages.${system}.cardano-cli
-            arion.packages.${system}.arion
-          ];
+      devShells = {
+        default = pkgs.mkShell {
+          nativeBuildInputs = with pkgs;
+            [
+              postgresql
+              jq
+              curl
+              ipfs
+              cardano-node.packages.${system}.cardano-cli
+              arion.packages.${system}.arion
+            ];
+        };
+        stage2 = cardano-transaction-lib.devShell.${system};
       };
       nixosModules.default = import ./nixos-module.nix inputs;
       nixosConfigurations.test = nixpkgs.lib.nixosSystem {
