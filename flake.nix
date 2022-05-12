@@ -23,8 +23,13 @@
     };
 
     nft-marketplace-server = {
-      url = "github:mlabs-haskell/nft-marketplace-server";
+      url = "github:synthetica9/nft-marketplace-server/syn/fix-release";
       flake = false;
+    };
+
+    # nft-marketplace-server needs some specific versions.
+    nixpkgs-nft-marketplace-server = {
+      url = "github:nixos/nixpkgs/2cf9db0e3d45b9d00f16f2836cb1297bcadc475e";
     };
 
     ogmios-datum-cache = {
@@ -55,7 +60,7 @@
         {
           inherit (final.callPackage
             (import "${nft-marketplace-server}/release.nix")
-            { nixpkgs = final; }) nft-marketplace-server;
+            { nixpkgs = inputs.nixpkgs-nft-marketplace-server.legacyPackages.${system}; }) nft-marketplace-server;
 
           # TODO: system-agnostic
           inherit (inputs.ogmios-datum-cache.packages.${system}) ogmios-datum-cache;

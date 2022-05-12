@@ -1,13 +1,6 @@
 { pkgs, ... }:
-let
-  # nft-marketplace-server =
-  #   (pkgs.callPackage (import nft-marketplace-server/release.nix)
-  #     { nixpkgs = pkgs; }).nft-marketplace-server;
-  # ogmios-datum-cache = (pkgs.callPackage (import ogmios-datum-cache/release.nix)
-  #   { nixpkgs = pkgs;}).ogmios-datum-cache;
-  # cardano-transaction-lib-server = (import
-  #   cardano-transaction-lib/default.nix).packages.x86_64-linux."cardano-browser-tx-server:exe:cardano-browser-tx-server";
-in {
+
+{
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
   config.services = {

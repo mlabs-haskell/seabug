@@ -2372,15 +2372,16 @@
     "nft-marketplace-server": {
       "flake": false,
       "locked": {
-        "lastModified": 1651319170,
-        "narHash": "sha256-A6egCyNnq+/BkWYGK1XF7SOYfhRYJOHlPf+iNRoF80o=",
-        "owner": "mlabs-haskell",
+        "lastModified": 1652356735,
+        "narHash": "sha256-qt3jLypevlPMcMHYi+4H+n4PPArGt39yEFety3qk4xA=",
+        "owner": "synthetica9",
         "repo": "nft-marketplace-server",
-        "rev": "e53e8848d119a22756457394c14c76ea7fac7298",
+        "rev": "25f6a0571323e52d22a711dc27301b435fb0caab",
         "type": "github"
       },
       "original": {
-        "owner": "mlabs-haskell",
+        "owner": "synthetica9",
+        "ref": "syn/fix-release",
         "repo": "nft-marketplace-server",
         "type": "github"
       }
@@ -2844,6 +2845,22 @@
         "owner": "NixOS",
         "ref": "nixpkgs-21.11-darwin",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-nft-marketplace-server": {
+      "locked": {
+        "lastModified": 1634172192,
+        "narHash": "sha256-FBF4U/T+bMg4sEyT/zkgasvVquGzgdAf4y8uCosKMmo=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "2cf9db0e3d45b9d00f16f2836cb1297bcadc475e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "2cf9db0e3d45b9d00f16f2836cb1297bcadc475e",
         "type": "github"
       }
     },
@@ -3446,6 +3463,7 @@
         "nft-marketplace": "nft-marketplace",
         "nft-marketplace-server": "nft-marketplace-server",
         "nixpkgs": "nixpkgs_7",
+        "nixpkgs-nft-marketplace-server": "nixpkgs-nft-marketplace-server",
         "ogmios-datum-cache": "ogmios-datum-cache_2"
       }
     },
