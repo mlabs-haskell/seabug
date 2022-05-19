@@ -22,7 +22,8 @@
 
 - nix
 - [IOHK binary cache](https://github.com/input-output-hk/plutus#how-to-set-up-the-iohk-binary-caches)
-- arion - Use patched one from `nix develop`!
+- arion - Provided by devshell
+- [docker](https://docs.docker.com/get-docker/)
 - [nami wallet](https://namiwallet.io/) installed as browser extension
 - Funds in wallet obtained from [faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
 
@@ -39,6 +40,7 @@ $ git clone --recurse-submodules git@github.com:mlabs-haskell/seabug.git
 ```shell
 $ nix develop --extra-experimental-features nix-command --extra-experimental-features flakes
 ```
+From now, execute every command in devshell dropped by `nix develop`
 
 ### Setup `nft.storage` key
 
