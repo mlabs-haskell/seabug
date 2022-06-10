@@ -18,12 +18,15 @@
       in rec {
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
-            postgresql
-            jq
-            curl
-            ipfs
-            cardano-node.packages.${system}.cardano-cli
             arion.packages.${system}.arion
+            cardano-node.packages.${system}.cardano-cli
+            curl
+            httpie
+            ipfs
+            jq
+            postgresql
+            shfmt
+            expect
           ];
         };
       });

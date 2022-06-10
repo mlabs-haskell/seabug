@@ -69,73 +69,80 @@ Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've
 
 ### Optional: Mint your own NFTs
 
-This process will be simplified in the future.
+#### Start plutus-chain-index 
 
+Set environment variables:
+
+``` shell
+$ pwd
+.../seabug
+$ export CARDANO_NODE_SOCKET_PATH=$PWD/data/cardano-node/ipc/node.socket
+$ mkdir -p chain-index
+$ export CHAIN_INDEX_PATH=$PWD/chain-index/chain-index.sqlite
+```
+
+Fix permission problem for `node.socket` (if you receive error like: `plutus-chain-index: Network.Socket.connect: <socket: 35>: permission denied (Permission denied)`):
+
+``` shell
+$ sudo chmod 0666 $CARDANO_NODE_SOCKET_PATH
+```
+
+Building and run plutus-chain-index from the source:
+
+```
+$ cd ..
+$ git clone git@github.com:input-output-hk/plutus-apps.git 
+$ cd plutus-apps
+$ nix build -f default.nix plutus-chain-index
+$ result/bin/plutus-chain-index start-index --network-id 1097911063 --db-path $CHAIN_INDEX_PATH/chain-index.sqlite --socket-path $CARDANO_NODE_SOCKET_PATH
+```
+
+The index should be synced for minting. 
+
+#### Prepare wallet
+
+``` shell
+$ cd seabug
+$ nix develop
+$ scripts/prepare-wallet.sh
+new wallet generated:
+address: addr_test1vp3tywa08qjjj7mplzmwjs9kmes0ce3ud5da3x0wppu5e9qgxqhps
+PHK: 62b23baf3825297b61f8b6e940b6de60fc663c6d1bd899ee08794c94
+file: payment.addr
+file: payment.vkey
+file: pab/signing-keys/signing-key-62b23baf3825297b61f8b6e940b6de60fc663c6d1bd899ee08794c94.skey
+```
+
+Add some Ada to your wallet:
+- by Nami wallet
+- or by [Faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
+  
+Check the result:
+  
 ```shell
-$ # Setup server admin token, password: seabug
-$ PGPASSWORD=seabug psql -U seabug -h localhost -c "INSERT INTO admin_token(token) VALUES ('ADMIN_TOKEN')"
+$ cd seabug
+$ cardano-cli query utxo --testnet-magic 1097911063 --address $(cat payment.addr)
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+ed11c8765d764852d049cd1a2239524ade0c6057a3a51146dc8c9d7bcbe008e0     0        100000000 lovelace + TxOutDatumNone
+```
 
-$ # Upload image
-$ curl --location --request POST "locahost:8008" \
-    -F "image=@./cat123.png" \
-    -F "title=Cat Cat number 123" \
-    -F "description=Cat eating piece of cheese" \
-    -H "Authorization: ADMIN_TOKEN"
+#### Mint your own NFT
 
-$ # Get IPFS CID, replace SHA_256_HASH with hash from previous response, note "ipfsHash"
-$ curl --location --request GET 'localhost:8008' \
-    | jq 'to_entries[] | select (.value.sha256hash=="SHA_256_HASH")'
+If you have an image:
 
-$ # Convert CID, replace "IPFS_HASH" with hash from previous response, note the result
-$ ipfs cid format -b=base36 IPFS_HASH
+``` shell
+$ cd seabug
+$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 
+```
 
-$ # Configure keys for BPI
-$ cd plutus-use-cases/mlabs
-$ cardano-cli address build \
-    --payment-verification-key-file payment.vkey \ 
-    --out-file payment.addr \ 
-    --testnet-magic 1097911063
-$ cardano-cli address key-gen \
-    --verification-key-file payment.vkey \
-    --signing-key-file payment.skey
-$ mkdir -p pab/signing-keys
-$ cat payment.addr
-$ mv payment.skey pab/signing-keys/signing-key-PKH_HERE.skey
+The script take some time to work, especially if you don't use effitient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`). 
 
-$ # Start BPI, note "minting-policy", it will be used later
-$ nix develop -L -c cabal run efficient-nft-pab
+If you already uploaded the image to nft.storage and have IPFC_CID (you can get it from nft.storage web interface).
 
-$ # In other console
-$ # Mint underlying CNFTs, replace "CONVERTED_CID" with the result of `ipfs` command
-$ curl --location --request POST 'localhost:3003/api/contract/activate' \
-    --header 'Content-Type: application/json' \
-    --data-raw '
-     {
-        "caID": {
-            "tag":"MintCnft",
-            "contents":[
-               {
-                  "mc'"'"'name":"Cat number 123",
-                  "mc'"'"'description":"Cat eating piece of cheese",
-                  "mc'"'"'image":"ipfs://CONVERTED_CID",
-                  "mc'"'"'tokenName":"cat-123" # This should be hex encoded (without 0x)
-               }
-            ]
-        }
-     }'
-
-$ # Go back to previous terminal and stop BPI
-$ # Replace "CURRENCY_SYMBOL" in /efficient-nft-pab/Main.hs with currency symbol from BPI log
-$ # Restart BPI, note "seabug-mint-request"
-$ nix develop -L -c cabal run efficient-nft-pab
-
-$ # Mint SeaBug NFT
-$ curl --location --request POST 'localhost:3003/api/contract/activate'
-    --header 'Content-Type: application/json' \
-    --data-raw 'INSERT_seabug-mint-request_HERE'
-
-$ cd ../cardano-transaction-lib
-$ # Replace value of "mintingPolicy1" in seabug_contracts/MintingPolicy.js with policy noted from BPI
+``` shell
+$ cd seabug
+$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' k2cwueaf1ew3nr2gq2rw83y13m2f5jpg8uyymn66kr8ogeglrwcou5u8
 ```
 
 ## Components
