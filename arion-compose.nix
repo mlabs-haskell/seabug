@@ -115,6 +115,7 @@ in {
         [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
     };
     nft-marketplace-server.service = {
+      image = "alpine";
       command = [
         "${nft-marketplace-server}/bin/nft-marketplace-server"
         "--db-connection"
