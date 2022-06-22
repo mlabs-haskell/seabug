@@ -13,3 +13,6 @@
 [submodule "plutus-use-cases"]
 	path = plutus-use-cases
 	url = https://github.com/mlabs-haskell/plutus-use-cases
+[submodule "seabug-contracts"]
+	path = seabug-contracts
+	url = https://github.com/mlabs-haskell/seabug-contracts

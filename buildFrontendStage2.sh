@@ -1,16 +1,24 @@
 set -e
 set -x
-cd cardano-transaction-lib
+
+SEABUG=$PWD
+
+cd $SEABUG/cardano-transaction-lib
 npm run bundle-seabug
-cd npm-packages/cardano-transaction-lib-seabug
+
+cd $SEABUG/npm-packages/cardano-transaction-lib-seabug
 npm install
-cd ../../..
+
+cd $SEABUG/nft-marketplace
+npm install
+
 # This is a replacement of npm link. npm link is problematic on immutable file systems
-rm -rf nft-marketplace/node_modules/cardano-transaction-lib-seabug
-mkdir -p $PWD/nft-marketplace/node_modules/
-ln -s $PWD/cardano-transaction-lib/npm-packages/cardano-transaction-lib-seabug\
-      $PWD/nft-marketplace/node_modules/cardano-transaction-lib-seabug
-cd nft-marketplace
+rm -rf $SEABUG/nft-marketplace/node_modules/seabug-contracts
+mkdir -p $SEABUG/nft-marketplace/node_modules/
+ln -s $SEABUG/seabug-contracts \
+      $SEABUG/nft-marketplace/node_modules/seabug-contracts
+
+cd $SEABUG/nft-marketplace
 rm .env
 cat <<EOT >> .env
 SKIP_PREFLIGHT_CHECK=true
