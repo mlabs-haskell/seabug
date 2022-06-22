@@ -3,11 +3,9 @@ set -x
 
 SEABUG=$PWD
 
-cd $SEABUG/cardano-transaction-lib
-npm run bundle-seabug
-
-cd $SEABUG/npm-packages/cardano-transaction-lib-seabug
+cd $SEABUG/seabug-contracts
 npm install
+make run-build
 
 cd $SEABUG/nft-marketplace
 npm install
@@ -40,5 +38,4 @@ REACT_APP_CTL_PROJECT_ID=testnetu7qDM8q2XT1S6gEBSicUIqXB6QN60l7B
 
 REACT_APP_IPFS_BASE_URL=https://cloudflare-ipfs.com/ipfs/
 EOT
-npm install
 npm run build
