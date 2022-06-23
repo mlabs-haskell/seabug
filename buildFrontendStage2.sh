@@ -17,7 +17,7 @@ ln -s $SEABUG/seabug-contracts \
       $SEABUG/nft-marketplace/node_modules/seabug-contracts
 
 cd $SEABUG/nft-marketplace
-rm .env
+rm -f .env
 cat <<EOT >> .env
 SKIP_PREFLIGHT_CHECK=true
 NODE_PATH=./src\
