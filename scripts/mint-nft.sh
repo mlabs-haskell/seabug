@@ -212,14 +212,14 @@ echo '>' BALANCE_TX_RESP: $BALANCE_TX_RESP
 MINTING_POLICY=$(cat efficient_nft_pab_out | rg minting-policy | sed -e 's/minting-policy: //' | jq -r .getMintingPolicy)
 echo '>' MINTING_POLICY: $MINTING_POLICY
 
-echo '>' patch seabug_contracts/Seabug/MintingPolicy.js
-sed -i "3s/\".*\"/\"$MINTING_POLICY\"/" cardano-transaction-lib/seabug_contracts/Seabug/MintingPolicy.js
-
 query_utxo
 
 echo '>' sleep 30 for minting work
 sleep 30
 
 query_utxo
+
+echo '>' patch seabug_contracts/Seabug/MintingPolicy.js
+sed -i "s/\".*\"/\"$MINTING_POLICY\"/" seabug-contracts/src/Seabug/MintingPolicy.js
 
 echo mint-nft ended

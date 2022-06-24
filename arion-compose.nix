@@ -4,8 +4,9 @@ let
     (pkgs.callPackage (import nft-marketplace-server/release.nix)
       { }).nft-marketplace-server;
   ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux.ogmios-datum-cache;
+  # FIXME: CTL version also pinned in seabug-contract. We need only one source of truth
   cardano-transaction-lib-server = (import
-    cardano-transaction-lib/default.nix).packages.x86_64-linux."cardano-browser-tx-server:exe:cardano-browser-tx-server";
+    cardano-transaction-lib/default.nix).packages.x86_64-linux."ctl-server:exe:ctl-server";
 in {
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
@@ -43,7 +44,7 @@ in {
     };
     cardano-transaction-lib-server.service = {
       command =
-        [ "${cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
+        [ "${cardano-transaction-lib-server}/bin/ctl-server" ];
       ports = [ "8081:8081" ];
       useHostStore = true;
     };
@@ -65,17 +66,20 @@ in {
       ];
     };
     ogmios-datum-cache.service = {
-      command = [ "${ogmios-datum-cache}/bin/ogmios-datum-cache" ];
+      command = [ "${ogmios-datum-cache}/bin/ogmios-datum-cache"
+                  "--db-connection" "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
+                  "--server-port" "9999"
+                  "--server-api" "usr:pwd"
+                  "--ogmios-address" "ogmios" "--ogmios-port" "1337"
+                  "--origin" "--use-latest"
+                  "--block-filter" "{\"address\": \"addr_test1wr05mmuhd3nvyjan9u4a7c76gj756am40qg7vuz90vnkjzczfulda\"}"
+                ];
       depends_on = {
         ogmios.condition = "service_healthy";
         postgresql-db.condition = "service_healthy";
       };
       ports = [ "9999:9999" ];
       useHostStore = true;
-      volumes = [
-        "${toString ./.}/config/datum-cache-config.toml:/config/config.toml"
-      ];
-      working_dir = "/config";
       restart = "always";
     };
     cardano-node.service = {
