@@ -3,7 +3,7 @@
 set -e
 
 if [ $# != 4 ] && [ $# != 5 ]; then
-	echo "Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> [<IPFC_CID>]"
+	echo "Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> [<IPFS_CID>]"
 	exit 1
 fi
 
@@ -11,13 +11,13 @@ IMAGE=$1
 TITLE=$2
 DESC=$3
 TOKEN_NAME=$4
-IPFC_CID=$5
+export IPFS_CID=$5
 
 echo IMAGE: $IMAGE
 echo TITLE: $TITLE
 echo DESC: $DESC
 echo TOKEN_NAME: $TOKEN_NAME
-echo IPFC_CID: $IPFC_CID
+echo IPFS_CID: $IPFS_CID
 
 TOKEN_NAME_BASE64=$(echo -n $TOKEN_NAME | od -A n -t x1 | tr -d " \n")
 echo TOKEN_NAME_BASE64: $TOKEN_NAME_BASE64
@@ -50,25 +50,24 @@ get_ipfs_hash() {
 
 efficient_nft_pab() {
 	cd plutus-use-cases/mlabs
-	rm -fv ../../efficient_nft_pab_out
 	if [ -z $CURRENCY ]; then
-		echo "> unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token \"$TOKEN_NAME\" | tee ../../efficient_nft_pab_out"
-		unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" >../../efficient_nft_pab_out
+		echo "> unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token \"$TOKEN_NAME\" | tee ../../$PAB_BUF"
+		unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" >../../$PAB_BUF
 	else
-		echo "> unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" --currency $CURRENCY | tee ../../efficient_nft_pab_out"
-		unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" --currency $CURRENCY >../../efficient_nft_pab_out
+		echo "> unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" --currency $CURRENCY | tee ../../$PAB_BUF"
+		unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" --currency $CURRENCY >../../$PAB_BUF
 	fi
 }
 
 wait_up_efficient_nft_pab() {
 	sleep 1
 	echo '>' wait_up_efficient_nft_pab...
-	while [ -z "$(rg 'Starting BotPlutusInterface server' efficient_nft_pab_out)" ] && [ ! -z "$(jobs)" ]; do
+	while [ -z "$(rg 'Starting BotPlutusInterface server' $PAB_BUF)" ] && [ ! -z "$(jobs)" ]; do
 		echo -n .
 		sleep 1
 	done
 	sleep 3
-	if [ ! -z "$(rg 'Network.Socket.bind: resource busy' efficient_nft_pab_out)" ]; then
+	if [ ! -z "$(rg 'Network.Socket.bind: resource busy' $PAB_BUF)" ]; then
 		echo "For some reason efficient_nft_pab already run, kill it"
 		exit 1
 	fi
@@ -76,12 +75,11 @@ wait_up_efficient_nft_pab() {
 }
 
 mint_cnft_request() {
-	local IPFC_CID=$1
 	http POST localhost:3003/api/contract/activate \
 		caID[tag]=MintCnft \
 		caID[contents][0]["mc'name"]="$TITLE" \
 		caID[contents][0]["mc'description"]="$DESC" \
-		caID[contents][0]["mc'image"]="ipfs://$IPFC_CID" \
+		caID[contents][0]["mc'image"]="ipfs://$IPFS_CID" \
 		caID[contents][0]["mc'tokenName"]="$TOKEN_NAME_BASE64" -v
 }
 
@@ -103,7 +101,7 @@ mint_request() {
 
 wait_balance_tx_efficient_nft_pab() {
 	echo '>' wait_balance_tx_efficient_nft_pab...
-	while [ -z "$(rg BalanceTxResp efficient_nft_pab_out)" ] && [ ! -z "$(jobs)" ]; do
+	while [ -z "$(rg BalanceTxResp $PAB_BUF)" ] && [ ! -z "$(jobs)" ]; do
 		echo -n .
 		sleep 1
 	done
@@ -132,7 +130,7 @@ query_utxo() {
 
 query_utxo
 
-if [ -z $IPFC_CID ]; then
+if [ -z $IPFS_CID ]; then
 	echo '>' Image upload...
 	BUF=$(
 		http --form POST localhost:8008/admin/upload_image \
@@ -151,7 +149,7 @@ if [ -z $IPFC_CID ]; then
 	echo '>' IMAGE_HASH: $IMAGE_HASH
 	IPFS_HASH=$(get_ipfs_hash $IMAGE_HASH)
 	echo '>' IPFS_HASH: $IPFS_HASH
-	IPFS_CID=$(ipfs cid format -b base36 $IPFS_HASH)
+	export IPFS_CID=$(ipfs cid format -b base36 $IPFS_HASH)
 	echo '>' IPFS_CID: $IPFS_CID
 fi
 
@@ -161,23 +159,31 @@ fi
 
 echo '>>>' mint cnft
 
+export PAB_BUF=efficient_nft_pab_out_1
+
 echo '>' Run efficient-nft-pab...
 efficient_nft_pab &
 wait_up_efficient_nft_pab
 echo '>' Run efficient-nft-pab...ok
 
 echo '>' Run mint_cnft_request...
-mint_cnft_request $IPFC_CID
+mint_cnft_request
 wait_balance_tx_efficient_nft_pab
 echo '>' Run mint_cnft_request...ok
 
 kill_bg_jobs
 
-BALANCE_TX_RESP=$(cat efficient_nft_pab_out | rg BalanceTxResp)
+BALANCE_TX_RESP=$(rg BalanceTxResp $PAB_BUF)
 echo '>' BALANCE_TX_RESP: $BALANCE_TX_RESP
 
 export CURRENCY=$(echo -n $BALANCE_TX_RESP | sed -E "s/^.*txMint = Value \(Map \[\(([^,]+).*/\1/")
 echo '>' CURRENCY: $CURRENCY
+
+MINTING_POLICY=$(rg '^minting-policy' efficient_nft_pab_out_1 | sed -e 's/minting-policy: //' | jq -r .getMintingPolicy)
+# echo '>' MINTING_POLICY: $MINTING_POLICY
+
+UNAPPLIED_MINTING_POLICY=$(rg '^unapplied-minting-policy' $PAB_BUF | sed -e 's/unapplied-minting-policy: //' | jq -r)
+echo '>' UNAPPLIED_MINTING_POLICY: $UNAPPLIED_MINTING_POLICY
 
 query_utxo
 
@@ -192,7 +198,7 @@ query_utxo
 
 echo '>>>' mint nft
 
-cp -v efficient_nft_pab_out efficient_nft_pab_out0
+export PAB_BUF=efficient_nft_pab_out_2
 
 echo '>' Run efficient-nft-pab...
 efficient_nft_pab &
@@ -206,11 +212,8 @@ echo '>' Run mint_request...ok
 
 kill_bg_jobs
 
-BALANCE_TX_RESP=$(cat efficient_nft_pab_out | rg BalanceTxResp)
+BALANCE_TX_RESP=$(rg BalanceTxResp $PAB_BUF)
 echo '>' BALANCE_TX_RESP: $BALANCE_TX_RESP
-
-MINTING_POLICY=$(cat efficient_nft_pab_out | rg minting-policy | sed -e 's/minting-policy: //' | jq -r .getMintingPolicy)
-echo '>' MINTING_POLICY: $MINTING_POLICY
 
 query_utxo
 
@@ -220,6 +223,6 @@ sleep 30
 query_utxo
 
 echo '>' patch seabug_contracts/Seabug/MintingPolicy.js
-sed -i "s/\".*\"/\"$MINTING_POLICY\"/" seabug-contracts/src/Seabug/MintingPolicy.js
+sed -i "s/\".*\"/\"$UNAPPLIED_MINTING_POLICY\"/" seabug-contracts/src/Seabug/MintingPolicy.js
 
 echo mint-nft ended
