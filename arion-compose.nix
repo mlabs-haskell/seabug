@@ -11,6 +11,7 @@ in {
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
   config.services = {
+
     nft-marketplace.service = {
       depends_on = {
         nft-marketplace-server.condition = "service_healthy";
@@ -42,12 +43,20 @@ in {
       };
       useHostStore = true;
     };
+
     cardano-transaction-lib-server.service = {
       command =
-        [ "${cardano-transaction-lib-server}/bin/ctl-server" ];
+        [ "${cardano-transaction-lib-server}/bin/ctl-server"
+          "--node-socket" "/ipc/node.socket"
+          "--network-id" "1097911063"
+        ];
       ports = [ "8081:8081" ];
       useHostStore = true;
+      volumes = [
+        "${toString ./.}/data/cardano-node/ipc:/ipc"
+      ];
     };
+
     ogmios.service = {
       command = [
         "--host"
@@ -65,6 +74,7 @@ in {
         "${toString ./.}/config:/config"
       ];
     };
+
     ogmios-datum-cache.service = {
       command = [ "${ogmios-datum-cache}/bin/ogmios-datum-cache"
                   "--db-connection" "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
@@ -82,6 +92,7 @@ in {
       useHostStore = true;
       restart = "always";
     };
+
     cardano-node.service = {
       environment = { NETWORK = "testnet"; };
       image = "inputoutput/cardano-node:1.33.0";
@@ -100,6 +111,7 @@ in {
         retries = 3;
       };
     };
+
     postgresql-db.service = {
       command = [ "-c" "stats_temp_directory=/tmp" ];
       environment = {
@@ -118,6 +130,7 @@ in {
       volumes =
         [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
     };
+
     nft-marketplace-server.service = {
       image = "alpine";
       command = [
@@ -148,5 +161,6 @@ in {
       restart = "always";
       volumes = [ "${toString ./.}/config/tmp:/tmp" ];
     };
+
   };
 }
