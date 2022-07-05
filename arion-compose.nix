@@ -47,8 +47,8 @@ in {
     cardano-transaction-lib-server.service = {
       command =
         [ "${cardano-transaction-lib-server}/bin/ctl-server"
-          "--node-socket" "/ipc/node.socket"
-          "--network-id" "1097911063"
+          "--port" "8081"
+          "--ogmios-host" "ogmios" "--ogmios-port" "1337"
         ];
       ports = [ "8081:8081" ];
       useHostStore = true;
