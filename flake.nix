@@ -2,10 +2,7 @@
   description = "Seabug";
   inputs = {
     nixpkgs = { url = "github:NixOS/nixpkgs"; };
-    cardano-node = {
-      url =
-        "github:input-output-hk/cardano-node/1.35.0";
-    };
+    cardano-node.url = "github:input-output-hk/cardano-node/1.35.0";
     flake-utils = { url = "github:numtide/flake-utils"; };
     # https://github.com/hercules-ci/arion/pull/153
     arion = {
