@@ -55,6 +55,7 @@ in {
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
       ];
+      restart = "always";
     };
 
     ogmios.service = {
@@ -73,6 +74,7 @@ in {
         "${toString ./.}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/config:/config"
       ];
+      restart = "always";
     };
 
     ogmios-datum-cache.service = {
@@ -110,6 +112,7 @@ in {
         start_period = "15m";
         retries = 3;
       };
+      restart = "always";
     };
 
     postgresql-db.service = {
@@ -129,6 +132,7 @@ in {
       };
       volumes =
         [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
+      restart = "always";
     };
 
     nft-marketplace-server.service = {
