@@ -4,7 +4,7 @@
     nixpkgs = { url = "github:NixOS/nixpkgs"; };
     cardano-node = {
       url =
-        "github:input-output-hk/cardano-node/73f9a746362695dc2cb63ba757fbcabb81733d23";
+        "github:input-output-hk/cardano-node/1.35.0";
     };
     flake-utils = { url = "github:numtide/flake-utils"; };
     # https://github.com/hercules-ci/arion/pull/153

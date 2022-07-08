@@ -163,6 +163,7 @@ export PAB_BUF=efficient_nft_pab_out_1
 
 echo '>' Run efficient-nft-pab...
 efficient_nft_pab &
+echo '>' If it stuck, check plutus-chain-index!
 wait_up_efficient_nft_pab
 echo '>' Run efficient-nft-pab...ok
 
@@ -179,11 +180,8 @@ echo '>' BALANCE_TX_RESP: $BALANCE_TX_RESP
 export CURRENCY=$(echo -n $BALANCE_TX_RESP | sed -E "s/^.*txMint = Value \(Map \[\(([^,]+).*/\1/")
 echo '>' CURRENCY: $CURRENCY
 
-MINTING_POLICY=$(rg '^minting-policy' efficient_nft_pab_out_1 | sed -e 's/minting-policy: //' | jq -r .getMintingPolicy)
-# echo '>' MINTING_POLICY: $MINTING_POLICY
-
-UNAPPLIED_MINTING_POLICY=$(rg '^unapplied-minting-policy' $PAB_BUF | sed -e 's/unapplied-minting-policy: //' | jq -r)
-echo '>' UNAPPLIED_MINTING_POLICY: $UNAPPLIED_MINTING_POLICY
+# UNAPPLIED_MINTING_POLICY=$(rg '^unapplied-minting-policy' $PAB_BUF | sed -e 's/unapplied-minting-policy: //' | jq -r)
+# echo '>' UNAPPLIED_MINTING_POLICY: $UNAPPLIED_MINTING_POLICY
 
 query_utxo
 
