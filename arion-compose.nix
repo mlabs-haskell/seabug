@@ -68,7 +68,7 @@ in {
         "/config/config.json"
       ];
       depends_on = { cardano-node.condition = "service_healthy"; };
-      image = "cardanosolutions/ogmios:v5.5.0-testnet";
+      image = "cardanosolutions/ogmios:v5.5.1-testnet";
       ports = [ "1337:1337" ];
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
@@ -97,7 +97,7 @@ in {
 
     cardano-node.service = {
       environment = { NETWORK = "testnet"; };
-      image = "inputoutput/cardano-node:1.35.0";
+      image = "inputoutput/cardano-node:1.35.1";
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/data/cardano-node/cardano-node-data:/data"

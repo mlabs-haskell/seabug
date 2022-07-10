@@ -1411,16 +1411,16 @@
         "utils": "utils_18"
       },
       "locked": {
-        "lastModified": 1656166930,
-        "narHash": "sha256-R7YGQ6UMG16ed9sGguDWq2cUgFnADeRdx8O2s2HqWRk=",
+        "lastModified": 1657227628,
+        "narHash": "sha256-CP58qcHZJGYq1FzXCj8ll085TvnJoYMeXnVGVGLYH/w=",
         "owner": "input-output-hk",
         "repo": "cardano-node",
-        "rev": "9f1d7dc163ee66410d912e48509d6a2300cfa68a",
+        "rev": "c75451f0ffd7a60b5ad6c4263891e6c8acac105a",
         "type": "github"
       },
       "original": {
         "owner": "input-output-hk",
-        "ref": "1.35.0",
+        "ref": "1.35.1",
         "repo": "cardano-node",
         "type": "github"
       }
