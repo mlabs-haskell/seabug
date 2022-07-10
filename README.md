@@ -133,7 +133,10 @@ If you have an image:
 
 ``` shell
 $ cd seabug
-$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 
+$ scripts/mint-nft.sh
+Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> <MINT_POLICY> [<IPFS_CID>]
+  <MINT_POLICY> - arbitrary string to identify mint policy
+$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 'mintPolicy' 
 ```
 
 The script take some time to work, especially if you haven't used efficient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`). 
@@ -142,7 +145,7 @@ If you already uploaded the image to nft.storage and have IPFC_CID (you can get 
 
 ``` shell
 $ cd seabug
-$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' k2cwueaf1ew3nr2gq2rw83y13m2f5jpg8uyymn66kr8ogeglrwcou5u8
+$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 'mintPolicy' k2cwueaf1ew3nr2gq2rw83y13m2f5jpg8uyymn66kr8ogeglrwcou5u8
 ```
 
 ## Components
@@ -150,6 +153,10 @@ $ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' k2cwueaf1e
 ### `nft-marketplace`
 
 Frontend for Seabug marketplace, interacts with Cardano blockchain using `cardano-transaction-lib`.
+
+### `seabug-contract`
+
+NFT marketplace contracts in purescript. Onchain part was hardcoded as binary.
 
 ### `ogmios-datum-cache`
 

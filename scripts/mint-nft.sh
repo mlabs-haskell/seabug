@@ -1,9 +1,16 @@
 #!/bin/bash
 
+# TODO: we don't need to restart nft_efficient_pab (early, it was required for
+# request generation). Removing it can significantly speedup minting process
+
+# TODO: we don't need passing arguments to the nft_efficient_pab. All real data
+# passed via http, and right now we need it only for form nft mint request.
+
 set -e
 
-if [ $# != 4 ] && [ $# != 5 ]; then
-	echo "Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> [<IPFS_CID>]"
+if [ $# != 5 ] && [ $# != 6 ]; then
+	echo "Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> <MINT_POLICY> [<IPFS_CID>]"
+	echo "  <MINT_POLICY> - arbitrary string"
 	exit 1
 fi
 
@@ -11,12 +18,14 @@ IMAGE=$1
 TITLE=$2
 DESC=$3
 TOKEN_NAME=$4
-export IPFS_CID=$5
+export MINT_POLICY=$5
+export IPFS_CID=$6
 
 echo IMAGE: $IMAGE
 echo TITLE: $TITLE
 echo DESC: $DESC
 echo TOKEN_NAME: $TOKEN_NAME
+echo MINT_POLICY: $MINT_POLICY
 echo IPFS_CID: $IPFS_CID
 
 TOKEN_NAME_BASE64=$(echo -n $TOKEN_NAME | od -A n -t x1 | tr -d " \n")
@@ -50,13 +59,16 @@ get_ipfs_hash() {
 
 efficient_nft_pab() {
 	cd plutus-use-cases/mlabs
-	if [ -z $CURRENCY ]; then
-		echo "> unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token \"$TOKEN_NAME\" | tee ../../$PAB_BUF"
-		unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" >../../$PAB_BUF
-	else
-		echo "> unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" --currency $CURRENCY | tee ../../$PAB_BUF"
-		unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation -- --pkh $PKH --auth-pkh $PKH --token "$TOKEN_NAME" --currency $CURRENCY >../../$PAB_BUF
+	CMD="unbuffer nix develop -c cabal run efficient-nft-pab --disable-optimisation --"
+	ARGS="--pkh $PKH --auth-pkh $PKH --token \"$TOKEN_NAME\""
+	if [ ! -z $CURRENCY ]; then
+		ARGS="$ARGS --currency $CURRENCY"
 	fi
+	# if [ ! -z $MINT_POLICY ]; then
+	# 	ARGS="$ARGS --mint-policy \"$MINT_POLICY\""
+	# fi
+	echo "> $CMD $ARGS | tee ../../$PAB_BUF"
+	$CMD $ARGS | tee ../../$PAB_BUF
 }
 
 wait_up_efficient_nft_pab() {
@@ -88,6 +100,7 @@ mint_request() {
 		caID[tag]=Mint \
 		caID[contents][0][unAssetClass][0][unCurrencySymbol]="$CURRENCY" \
 		caID[contents][0][unAssetClass][1][unTokenName]="$TOKEN_NAME" \
+		caID[contents][1]["mp'mintPolicy"]="$MINT_POLICY" \
 		caID[contents][1]["mp'fakeAuthor"][unPaymentPubKeyHash][getPubKeyHash]="$PKH" \
 		caID[contents][1]["mp'feeVaultKeys"]:=[] \
 		caID[contents][1]["mp'price"]:=100000000 \
@@ -180,8 +193,8 @@ echo '>' BALANCE_TX_RESP: $BALANCE_TX_RESP
 export CURRENCY=$(echo -n $BALANCE_TX_RESP | sed -E "s/^.*txMint = Value \(Map \[\(([^,]+).*/\1/")
 echo '>' CURRENCY: $CURRENCY
 
-# UNAPPLIED_MINTING_POLICY=$(rg '^unapplied-minting-policy' $PAB_BUF | sed -e 's/unapplied-minting-policy: //' | jq -r)
-# echo '>' UNAPPLIED_MINTING_POLICY: $UNAPPLIED_MINTING_POLICY
+UNAPPLIED_MINTING_POLICY=$(rg '^unapplied-minting-policy' $PAB_BUF | sed -e 's/unapplied-minting-policy: //' | jq -r)
+echo '>' UNAPPLIED_MINTING_POLICY: $UNAPPLIED_MINTING_POLICY
 
 query_utxo
 
