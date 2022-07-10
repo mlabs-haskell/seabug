@@ -136,7 +136,7 @@ $ cd seabug
 $ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 
 ```
 
-The script take some time to work, especially if you don't use effitient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`). 
+The script take some time to work, especially if you haven't used efficient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`). 
 
 If you already uploaded the image to nft.storage and have IPFC_CID (you can get it from nft.storage web interface).
 
