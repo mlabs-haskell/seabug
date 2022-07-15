@@ -37,6 +37,5 @@ This document is my notes on the paper "Self-Governed NFTs on Cardano: Meta-Stan
         -   The version name is an arbitrarily decided string marking the script version, for example `"myscriptv1"`
         -   This field is used to sync the scripts used, before applying parameters
         -   This field can be used to lookup the relevant script, apply the parameters specified by the rest of the metadata fields, and verify that the metadata is correct
-    -   The `<policy_id>` is the currency symbol of the underlying nft
-        -   This same currency symbol is also included in the `collectionNftCS` field
+    -   The `<policy_id>` is the currency symbol of the sgNft
     -   `marketplaceScript/Share` corresponds to the `daoScript/Share` parameters used for the minting policy
