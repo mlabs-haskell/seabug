@@ -3,19 +3,20 @@
 This document is my notes on the paper "Self-Governed NFTs on Cardano: Meta-Standard for Standards with Vertical and Horizontal Version Travel for a Decentralized Future" by Maksymilian Brodowicz, which describes the protocol used by the Seabug NFT marketplace. I wrote this because I found the paper hard to understand; this document is meant to be referenced alongside the paper to aid understanding. Also see the code [here](https://github.com/mlabs-haskell/plutus-use-cases/tree/main/mlabs/src/Mlabs/EfficientNFT) for a reference implementation of the protocol.
 
 -   Protocol involves two separate NFTs:
-    -   "Collection NFT" aka "underlying NFT": this is created as an nft of the image to be sold
+    -   "Collection NFT" aka "underlying NFT": a traditional Cardano NFT to be imported to seabug
         -   CNFT stands for collection nft
-        -   There could be multiple images in the same collection, i.e. multiple tokens under the same currency symbol
+        -   There can be multiple nfts under the same collection, i.e. tokens with the same currency symbol but different token name
         -   Note that there can also be different nfts for the same image
+        -   The minting policy for the CNFT is also referred to as the CurrencyScript in the metadata section of the paper
     -   "Self-governing NFT": this is minted by "the minting policy" (section 2.1 in the paper) parameterized by the collection nft's currency symbol (as well as some other things)
         -   sgNFT stands for self-governing nft
         -   The sgNft's token name is a hash of the current price, owner, and the CNFT's token name
-        -   For each image nft in a collection, there can be only one sgNft corresponding to it (assuming the image token is actually an nft, i.e. it wasn't minted with multiple values and can't be minted again)
+        -   For each collection nft, there can be only one sgNft corresponding to it (assuming the collection nft is actually an nft, i.e. it wasn't minted with multiple values and can't be minted again)
 -   Collection nft gets sent to the "locking script" aka "locking policy"
 -   Self-governing nft can be sent anywhere
     -   It will most likely be sent to a validator of the nft marketplace; when it is locked by such a validator, the nft is "on the marketplace", so to speak
     -   The sgNft can also be locked at the owner's address, which will then require their signature for any actions
--   The minting policy (aka "the CurrencyScript") is used not only to mint/burn the sgNft but also to change ownership and price
+-   The minting policy is used not only to mint/burn the sgNft but also to change ownership and price
     -   Ownership and price are changed by burning the current sgNft and minting a new one with an updated token name
     -   The minting policy must account for the possibility that the sgNft is not locked at the owner's address:
         -   In the case of an nft marketplace, the nft will likely be locked at the marketplace script address
