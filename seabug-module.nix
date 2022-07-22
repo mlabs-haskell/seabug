@@ -1,11 +1,11 @@
-{arionModule, seabugOverlay}: {
-  lib,
-  config,
-  ...
-}:
+{ arionModule, seabugOverlay }: { lib
+                                , config
+                                , ...
+                                }:
 with lib; let
   cfg = config.services.seabug;
-in {
+in
+{
   options.services.seabug = {
     enable = mkEnableOption ''
       Seabug
@@ -17,10 +17,13 @@ in {
   ];
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [seabugOverlay];
+    networking.firewall.enable = false;
+    nixpkgs.overlays = [ seabugOverlay ];
     virtualisation.arion = {
-      backend = "podman-socket";
-      projects.seabug.settings.imports = [./arion-compose.nix];
+      # backend = "podman-socket";
+      backend = "docker";
+      projects.seabug.settings.imports = [ ./arion-compose.nix ];
+
     };
   };
 }

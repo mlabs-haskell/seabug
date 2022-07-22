@@ -66,7 +66,7 @@
             ;
 
           # TODO: system-agnostic
-          # inherit (inputs.ogmios-datum-cache.packages.${system}) ogmios-datum-cache;
+          inherit (inputs.ogmios-datum-cache.packages.${system}) ogmios-datum-cache;
 
           cardano-transaction-lib-server =
             cardano-transaction-lib.packages.${system}."cardano-browser-tx-server:exe:cardano-browser-tx-server";
@@ -130,14 +130,37 @@
         let
           pkgs = pkgsFor system;
           vm = nixosConfigurations.seabug-vm.config.system.build.vm;
+          program = pkgs.writeShellScript "run-vm" ''
+            set -euo pipefail
+            # set -x
+
+            [ -x nixos.qcow2 ] && echo "⚠️ nixos.qcow2 already exists..."
+
+            export QEMU_NET_OPTS="hostfwd=tcp::2221-:22,hostfwd=tcp::8080-:8008"
+            export QEMU_OPTS
+            ${vm}/bin/run-nixos-vm &
+            PID=$!
+
+            # Wait for the VM to start
+            while ! curl -m 1 -s http://localhost:8080/;
+            do
+              if ! kill -0 $PID; then
+                echo "❌ VM failed to start"
+                exit 1
+              fi
+              sleep 1;
+            done
+
+            ${pkgs.python3}/bin/python -c 'import webbrowser; webbrowser.open("http://localhost:8080/")' &
+
+            # Wait for the VM to exit
+            wait $PID
+          '';
         in
         {
           default = {
             type = "app";
-            program = pkgs.writeShellScript "run-vm" ''
-              export QEMU_NET_OPTS="hostfwd=tcp::2221-:22,hostfwd=tcp::8080-:80"
-              ${vm}/bin/run-nixos-vm
-            '';
+            program = "${program}";
           };
         });
 

@@ -1,5 +1,8 @@
 { pkgs, ... }:
+let
+  pwd = "/tmp/";
 
+in
 {
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
@@ -15,7 +18,7 @@
       image = "nginx:1.20.2-alpine";
       ports = [ "8080:80" ];
       volumes = [
-        "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
+        # "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
         "${toString ./.}/config/nginx.conf:/etc/nginx/nginx.conf"
       ];
       healthcheck = {
@@ -54,7 +57,7 @@
       image = "cardanosolutions/ogmios:v5.2.0-testnet";
       ports = [ "1337:1337" ];
       volumes = [
-        "${toString ./.}/data/cardano-node/ipc:/ipc"
+        "${pwd}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/config:/config"
       ];
     };
@@ -76,8 +79,8 @@
       environment = { NETWORK = "testnet"; };
       image = "inputoutput/cardano-node:1.33.0";
       volumes = [
-        "${toString ./.}/data/cardano-node/ipc:/ipc"
-        "${toString ./.}/data/cardano-node/cardano-node-data:/data"
+        "${pwd}/data/cardano-node/ipc:/ipc"
+        "${pwd}/data/cardano-node/cardano-node-data:/data"
       ];
       healthcheck = {
         test = [
@@ -105,8 +108,9 @@
         timeout = "5s";
         retries = 3;
       };
-      volumes =
-        [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
+      volumes = [
+        "${pwd}/data/postgres-data:/var/lib/postgresql/data"
+      ];
     };
     nft-marketplace-server.service = {
       command = [
@@ -135,7 +139,9 @@
       };
       useHostStore = true;
       restart = "always";
-      volumes = [ "${toString ./.}/config/tmp:/tmp" ];
+      volumes = [
+        "${pwd}/config/tmp:/tmp"
+      ];
     };
   };
 }

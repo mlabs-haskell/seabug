@@ -1198,7 +1198,9 @@
         "flake-utils-pre-commit": "flake-utils-pre-commit",
         "gomod2nix": "gomod2nix",
         "mach-nix": "mach-nix",
-        "nixpkgs": "nixpkgs_7",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "node2nix": "node2nix",
         "poetry2nix": "poetry2nix",
         "pre-commit-hooks": "pre-commit-hooks"
@@ -3160,21 +3162,6 @@
     },
     "nixpkgs_7": {
       "locked": {
-        "lastModified": 1657638268,
-        "narHash": "sha256-blBNtQSslAFkg0Gym9fWNJk+bPxGSZib4SOcPrmTPi4=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "d80993b5f885515254746ba6d1917276ee386149",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-unstable",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_8": {
-      "locked": {
         "lastModified": 1657802959,
         "narHash": "sha256-9+JWARSdlL8KiH3ymnKDXltE1vM+/WEJ78F5B1kjXys=",
         "owner": "NixOS",
@@ -3189,7 +3176,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_9": {
+    "nixpkgs_8": {
       "locked": {
         "lastModified": 1634172192,
         "narHash": "sha256-FBF4U/T+bMg4sEyT/zkgasvVquGzgdAf4y8uCosKMmo=",
@@ -3281,7 +3268,7 @@
     "ogmios-datum-cache_2": {
       "inputs": {
         "flake-compat": "flake-compat_2",
-        "nixpkgs": "nixpkgs_9"
+        "nixpkgs": "nixpkgs_8"
       },
       "locked": {
         "lastModified": 1652274727,
@@ -3646,7 +3633,7 @@
         "dream2nix": "dream2nix",
         "nft-marketplace": "nft-marketplace",
         "nft-marketplace-server": "nft-marketplace-server",
-        "nixpkgs": "nixpkgs_8",
+        "nixpkgs": "nixpkgs_7",
         "nixpkgs-nft-marketplace-server": "nixpkgs-nft-marketplace-server",
         "ogmios-datum-cache": "ogmios-datum-cache_2"
       }
