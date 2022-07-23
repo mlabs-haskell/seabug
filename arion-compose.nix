@@ -2,7 +2,7 @@
 let
   nft-marketplace-server =
     (pkgs.callPackage (import nft-marketplace-server/default.nix)
-      { }).nft-marketplace-server;
+      { }).packages.x86_64-linux.nft-marketplace-server;
   ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux.ogmios-datum-cache;
   cardano-transaction-lib-server = (import
     cardano-transaction-lib/default.nix).packages.x86_64-linux."cardano-browser-tx-server:exe:cardano-browser-tx-server";
