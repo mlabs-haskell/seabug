@@ -1,7 +1,7 @@
 { pkgs, ... }:
 let
   nft-marketplace-server =
-    (pkgs.callPackage (import nft-marketplace-server/release.nix)
+    (pkgs.callPackage (import nft-marketplace-server/default.nix)
       { }).nft-marketplace-server;
   ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux.ogmios-datum-cache;
   cardano-transaction-lib-server = (import
