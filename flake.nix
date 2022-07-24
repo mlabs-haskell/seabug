@@ -46,9 +46,16 @@
     , nft-marketplace-server
     , ogmios-datum-cache
     , cardano-transaction-lib
+    , dream2nix
     , ...
     } @ inputs:
     let
+      nft-marketplace-flake = dream2nix.lib.makeFlakeOutputs {
+        systems = supportedSystems;
+        config.projectRoot = inputs.nft-marketplace;
+        source = inputs.nft-marketplace;
+      };
+
       supportedSystems = [ "x86_64-linux" "x86_64-darwin" ];
 
       perSystem = nixpkgs.lib.genAttrs supportedSystems;
@@ -70,6 +77,8 @@
 
           cardano-transaction-lib-server =
             cardano-transaction-lib.packages.${system}."cardano-browser-tx-server:exe:cardano-browser-tx-server";
+
+          inherit (nft-marketplace-flake.packages.${system}) nft-marketplace;
         };
 
       pkgsFor = system:
@@ -136,10 +145,17 @@
 
             [ -x nixos.qcow2 ] && echo "⚠️ nixos.qcow2 already exists..."
 
-            export QEMU_NET_OPTS="hostfwd=tcp::2221-:22,hostfwd=tcp::8080-:8008"
-            export QEMU_OPTS
+            export QEMU_NET_OPTS="hostfwd=tcp::2221-:22,hostfwd=tcp::8080-:8080"
+            export QEMU_OPTS="-serial stdio"
             ${vm}/bin/run-nixos-vm &
             PID=$!
+
+            sleep 3
+            ${pkgs.sshpass}/bin/sshpass -p toor \
+              ${pkgs.openssh}/bin/ssh root@127.0.0.1 -p 2221 \
+              -o "UserKnownHostsFile=/dev/null" \
+              -o "StrictHostKeyChecking=no" \
+              journalctl -f -u arion-seabug.service &
 
             # Wait for the VM to start
             while ! curl -m 1 -s http://localhost:8080/;
@@ -151,7 +167,7 @@
               sleep 1;
             done
 
-            ${pkgs.python3}/bin/python -c 'import webbrowser; webbrowser.open("http://localhost:8080/")' &
+            ${pkgs.python3}/bin/python -m webbrowser http://localhost:8080 &
 
             # Wait for the VM to exit
             wait $PID

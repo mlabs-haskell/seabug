@@ -20,8 +20,8 @@ in
     networking.firewall.enable = false;
     nixpkgs.overlays = [ seabugOverlay ];
     virtualisation.arion = {
-      # backend = "podman-socket";
-      backend = "docker";
+      backend = "podman-socket";
+      # backend = "docker";
       projects.seabug.settings.imports = [ ./arion-compose.nix ];
 
     };

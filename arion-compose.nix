@@ -1,9 +1,17 @@
-{ pkgs, ... }:
-let
-  pwd = "/tmp/";
+{ pkgs, lib, config, ... }:
 
+let
+  inherit (config) share_dir;
+  inherit (pkgs.lib) mkOption;
 in
+
 {
+  options = {
+    share_dir = mkOption {
+      default = "/var/lib/seabug";
+    };
+  };
+
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
   config.services = {
@@ -19,6 +27,7 @@ in
       ports = [ "8080:80" ];
       volumes = [
         # "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
+        "${pkgs.nft-marketplace}/lib/node_modules/nft-marketplace/build:/usr/share/nginx/html"
         "${toString ./.}/config/nginx.conf:/etc/nginx/nginx.conf"
       ];
       healthcheck = {
@@ -57,7 +66,7 @@ in
       image = "cardanosolutions/ogmios:v5.2.0-testnet";
       ports = [ "1337:1337" ];
       volumes = [
-        "${pwd}/data/cardano-node/ipc:/ipc"
+        "${share_dir}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/config:/config"
       ];
     };
@@ -79,8 +88,8 @@ in
       environment = { NETWORK = "testnet"; };
       image = "inputoutput/cardano-node:1.33.0";
       volumes = [
-        "${pwd}/data/cardano-node/ipc:/ipc"
-        "${pwd}/data/cardano-node/cardano-node-data:/data"
+        "${share_dir}/data/cardano-node/ipc:/ipc"
+        "${share_dir}/data/cardano-node/cardano-node-data:/data"
       ];
       healthcheck = {
         test = [
@@ -109,7 +118,7 @@ in
         retries = 3;
       };
       volumes = [
-        "${pwd}/data/postgres-data:/var/lib/postgresql/data"
+        "${share_dir}/data/postgres-data:/var/lib/postgresql/data"
       ];
     };
     nft-marketplace-server.service = {
@@ -140,7 +149,7 @@ in
       useHostStore = true;
       restart = "always";
       volumes = [
-        "${pwd}/config/tmp:/tmp"
+        "${share_dir}/config/tmp:/tmp"
       ];
     };
   };
