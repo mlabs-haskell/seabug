@@ -1,7 +1,7 @@
 { pkgs, lib, config, ... }:
 
 let
-  inherit (config) share_dir;
+  inherit (config) share_dir nft-storage-key;
   inherit (pkgs.lib) mkOption;
 in
 
@@ -9,6 +9,10 @@ in
   options = {
     share_dir = mkOption {
       default = "/var/lib/seabug";
+    };
+
+    nft-storage-key = mkOption {
+      default = "NFT_STORAGE_KEY_HERE";
     };
   };
 
@@ -128,7 +132,7 @@ in
         "--db-connection"
         "postgresql://seabug:seabug@postgresql-db:5432/seabug"
         "--nft-storage-key"
-        "NFT_STORAGE_KEY_HERE"
+        nft-storage-key
       ];
       depends_on = { postgresql-db.condition = "service_healthy"; };
       ports = [ "8008:9999" ];
