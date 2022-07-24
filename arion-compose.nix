@@ -122,6 +122,7 @@ in
       ];
     };
     nft-marketplace-server.service = {
+      image = "alpine";
       command = [
         "${pkgs.nft-marketplace-server}/bin/nft-marketplace-server"
         "--db-connection"
