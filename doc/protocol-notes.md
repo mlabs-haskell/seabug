@@ -40,3 +40,4 @@ This document is my notes on the paper "Self-Governed NFTs on Cardano: Meta-Stan
         -   This field can be used to lookup the relevant script, apply the parameters specified by the rest of the metadata fields, and verify that the metadata is correct
     -   The `<policy_id>` is the currency symbol of the sgNft
     -   `marketplaceScript/Share` corresponds to the `daoScript/Share` parameters used for the minting policy
+-   Note that while the paper defines shares to be in the range of \[0, 1000\], Seabug uses the range \[0, 10000\] (see [here](https://github.com/mlabs-haskell/seabug-contracts/pull/5#discussion_r930117517))
