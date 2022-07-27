@@ -83,7 +83,7 @@ in {
                   "--server-port" "9999"
                   "--server-api" "usr:pwd"
                   "--ogmios-address" "ogmios" "--ogmios-port" "1337"
-                  "--origin" "--use-latest"
+                  "--from-tip" "--use-latest"
                   "--block-filter" "{\"address\": \"addr_test1wr05mmuhd3nvyjan9u4a7c76gj756am40qg7vuz90vnkjzczfulda\"}"
                 ];
       depends_on = {
@@ -97,7 +97,7 @@ in {
 
     cardano-node.service = {
       environment = { NETWORK = "testnet"; };
-      image = "inputoutput/cardano-node:1.35.1";
+      image = "inputoutput/cardano-node:1.35.2";
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/data/cardano-node/cardano-node-data:/data"
