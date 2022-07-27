@@ -1,9 +1,7 @@
 { pkgs, ... }:
 let
-  nft-marketplace-server =
-    (pkgs.callPackage (import nft-marketplace-server/release.nix)
-      { }).nft-marketplace-server;
-  ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux.ogmios-datum-cache;
+  nft-marketplace-server = (import nft-marketplace-server/default.nix).packages.x86_64-linux."nft-marketplace-server:exe:nft-marketplace-server";
+  ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux."ogmios-datum-cache";
   # FIXME: CTL version also pinned in seabug-contract. We need only one source of truth
   cardano-transaction-lib-server = (import
     cardano-transaction-lib/default.nix).packages.x86_64-linux."ctl-server:exe:ctl-server";
