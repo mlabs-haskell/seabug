@@ -69,7 +69,9 @@ Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've
 
 ### Optional: Mint your own NFTs
 
-#### Start plutus-chain-index 
+UPDATE: see the minting section in `seabug-contracts/README.md` instead. The following minting process is currently broken, see [\#22](https://github.com/mlabs-haskell/seabug/issues/22).
+
+#### Start plutus-chain-index
 
 Set environment variables:
 
@@ -91,13 +93,13 @@ Building and run plutus-chain-index from the source:
 
 ```
 $ cd ..
-$ git clone git@github.com:input-output-hk/plutus-apps.git 
+$ git clone git@github.com:input-output-hk/plutus-apps.git
 $ cd plutus-apps
 $ nix build -f default.nix plutus-chain-index
 $ result/bin/plutus-chain-index start-index --network-id 1097911063 --db-path $CHAIN_INDEX_PATH/chain-index.sqlite --socket-path $CARDANO_NODE_SOCKET_PATH
 ```
 
-The index should be synced for minting. 
+The index should be synced for minting.
 
 #### Prepare wallet
 
@@ -116,9 +118,9 @@ file: pab/signing-keys/signing-key-62b23baf3825297b61f8b6e940b6de60fc663c6d1bd89
 Add some Ada to your wallet:
 - by Nami wallet
 - or by [Faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
-  
+
 Check the result:
-  
+
 ```shell
 $ cd seabug
 $ cardano-cli query utxo --testnet-magic 1097911063 --address $(cat payment.addr)
@@ -136,10 +138,10 @@ $ cd seabug
 $ scripts/mint-nft.sh
 Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> <MINT_POLICY> [<IPFS_CID>]
   <MINT_POLICY> - arbitrary string to identify mint policy
-$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 'mintPolicy' 
+$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 'mintPolicy'
 ```
 
-The script take some time to work, especially if you haven't used efficient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`). 
+The script take some time to work, especially if you haven't used efficient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`).
 
 If you already uploaded the image to nft.storage and have IPFC_CID (you can get it from nft.storage web interface).
 
