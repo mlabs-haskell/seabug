@@ -23,6 +23,7 @@ in {
       volumes = [
         "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
         "${toString ./.}/config/nginx.conf:/etc/nginx/nginx.conf"
+        "${toString ./.}/config/nginx-default.conf:/etc/nginx/conf.d/default.conf"
       ];
       healthcheck = {
         test = [
