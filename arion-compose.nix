@@ -64,7 +64,7 @@ in {
         "--node-socket"
         "/ipc/node.socket"
         "--node-config"
-        "/config/config.json"
+        "/config/testnet-node-config.json"
       ];
       depends_on = { cardano-node.condition = "service_healthy"; };
       image = "cardanosolutions/ogmios:v5.5.1-testnet";
