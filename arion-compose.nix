@@ -1,5 +1,8 @@
 { pkgs, ... }:
 let
+  # The address of the marketplace script (`MarketPlace.js` in `seabug-contracts`)
+  marketplace-escrow-address = "addr_test1wr05mmuhd3nvyjan9u4a7c76gj756am40qg7vuz90vnkjzczfulda";
+
   nft-marketplace-server = (import nft-marketplace-server/default.nix).packages.x86_64-linux."nft-marketplace-server:exe:nft-marketplace-server";
   ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux."ogmios-datum-cache";
   # FIXME: CTL version also pinned in seabug-contract. We need only one source of truth
@@ -83,7 +86,7 @@ in {
                   "--server-api" "usr:pwd"
                   "--ogmios-address" "ogmios" "--ogmios-port" "1337"
                   "--from-tip" "--use-latest"
-                  "--block-filter" "{\"address\": \"addr_test1wr05mmuhd3nvyjan9u4a7c76gj756am40qg7vuz90vnkjzczfulda\"}"
+                  "--block-filter" "{\"address\": \"${marketplace-escrow-address}\"}"
                 ];
       depends_on = {
         ogmios.condition = "service_healthy";
