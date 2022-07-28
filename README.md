@@ -69,86 +69,31 @@ Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've
 
 ### Optional: Mint your own NFTs
 
-UPDATE: see the minting section in `seabug-contracts/README.md` instead. The following minting process is currently broken, see [\#22](https://github.com/mlabs-haskell/seabug/issues/22).
+See the minting section in `seabug-contracts/README.md`. The following section describes how to upload an image and get its IPFS CID.
 
-#### Start plutus-chain-index
-
-Set environment variables:
-
-``` shell
-$ pwd
-.../seabug
-$ export CARDANO_NODE_SOCKET_PATH=$PWD/data/cardano-node/ipc/node.socket
-$ mkdir -p chain-index
-$ export CHAIN_INDEX_PATH=$PWD/chain-index/chain-index.sqlite
-```
-
-Fix permission problem for `node.socket` (if you receive error like: `plutus-chain-index: Network.Socket.connect: <socket: 35>: permission denied (Permission denied)`):
-
-``` shell
-$ sudo chmod 0666 $CARDANO_NODE_SOCKET_PATH
-```
-
-Building and run plutus-chain-index from the source:
-
-```
-$ cd ..
-$ git clone git@github.com:input-output-hk/plutus-apps.git
-$ cd plutus-apps
-$ nix build -f default.nix plutus-chain-index
-$ result/bin/plutus-chain-index start-index --network-id 1097911063 --db-path $CHAIN_INDEX_PATH/chain-index.sqlite --socket-path $CARDANO_NODE_SOCKET_PATH
-```
-
-The index should be synced for minting.
-
-#### Prepare wallet
-
-``` shell
-$ cd seabug
-$ nix develop
-$ scripts/prepare-wallet.sh
-new wallet generated:
-address: addr_test1vp3tywa08qjjj7mplzmwjs9kmes0ce3ud5da3x0wppu5e9qgxqhps
-PHK: 62b23baf3825297b61f8b6e940b6de60fc663c6d1bd899ee08794c94
-file: payment.addr
-file: payment.vkey
-file: pab/signing-keys/signing-key-62b23baf3825297b61f8b6e940b6de60fc663c6d1bd899ee08794c94.skey
-```
-
-Add some Ada to your wallet:
-- by Nami wallet
-- or by [Faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
-
-Check the result:
-
-```shell
-$ cd seabug
-$ cardano-cli query utxo --testnet-magic 1097911063 --address $(cat payment.addr)
-                           TxHash                                 TxIx        Amount
---------------------------------------------------------------------------------------
-ed11c8765d764852d049cd1a2239524ade0c6057a3a51146dc8c9d7bcbe008e0     0        100000000 lovelace + TxOutDatumNone
-```
-
-#### Mint your own NFT
+#### Upload NFT image
 
 If you have an image:
 
 ``` shell
 $ cd seabug
-$ scripts/mint-nft.sh
-Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION> <TOKEN_NAME> <MINT_POLICY> [<IPFS_CID>]
-  <MINT_POLICY> - arbitrary string to identify mint policy
-$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 'mintPolicy'
+$ scripts/upload-image.sh
+Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION>
+$ scripts/upload-image.sh 'image.jpeg' 'Title' 'Description'
 ```
 
-The script take some time to work, especially if you haven't used efficient_nft_pab before (`cd plutus-use-cases/mlabs && nix develop -c cabal run efficient-nft-pab --disable-optimisation`).
+This will add the image to IPFS and the postgres database, and should print out something like:
 
-If you already uploaded the image to nft.storage and have IPFC_CID (you can get it from nft.storage web interface).
-
-``` shell
-$ cd seabug
-$ scripts/mint-nft.sh 'image.jpeg' 'Title' 'Description' 'Token name' 'mintPolicy' k2cwueaf1ew3nr2gq2rw83y13m2f5jpg8uyymn66kr8ogeglrwcou5u8
 ```
+IMAGE: image.jpeg
+TITLE: Title
+DESC: Description
+> IMAGE_HASH: 4cefddfb4f62a3c68d08863cc299a2d6411174c8ff3325d21239ad3b5dcbf21c
+> IPFS_HASH: bafkreicm57o7wt3cupdi2ceghtbjtiwwieixjsh7gms5eerzvu5v3s7sdq
+> IPFS Base36 CID: k2cwueakfq42m0c5y33czg6ces3tj9b1xlv59krz88y2r8m18e2zxee4
+```
+
+The `IPFS Base36 CID` value can be used to continue the minting process.
 
 ## Components
 
