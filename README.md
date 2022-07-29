@@ -69,80 +69,41 @@ Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've
 
 ### Optional: Mint your own NFTs
 
-This process will be simplified in the future.
+See the minting section in `seabug-contracts/README.md`. The following section describes how to upload an image and get its IPFS CID.
 
-```shell
-$ # Setup server admin token, password: seabug
-$ PGPASSWORD=seabug psql -U seabug -h localhost -c "INSERT INTO admin_token(token) VALUES ('ADMIN_TOKEN')"
+#### Upload NFT image
 
-$ # Upload image
-$ curl --location --request POST "locahost:8008" \
-    -F "image=@./cat123.png" \
-    -F "title=Cat Cat number 123" \
-    -F "description=Cat eating piece of cheese" \
-    -H "Authorization: ADMIN_TOKEN"
+If you have an image:
 
-$ # Get IPFS CID, replace SHA_256_HASH with hash from previous response, note "ipfsHash"
-$ curl --location --request GET 'localhost:8008' \
-    | jq 'to_entries[] | select (.value.sha256hash=="SHA_256_HASH")'
-
-$ # Convert CID, replace "IPFS_HASH" with hash from previous response, note the result
-$ ipfs cid format -b=base36 IPFS_HASH
-
-$ # Configure keys for BPI
-$ cd plutus-use-cases/mlabs
-$ cardano-cli address build \
-    --payment-verification-key-file payment.vkey \ 
-    --out-file payment.addr \ 
-    --testnet-magic 1097911063
-$ cardano-cli address key-gen \
-    --verification-key-file payment.vkey \
-    --signing-key-file payment.skey
-$ mkdir -p pab/signing-keys
-$ cat payment.addr
-$ mv payment.skey pab/signing-keys/signing-key-PKH_HERE.skey
-
-$ # Start BPI, note "minting-policy", it will be used later
-$ nix develop -L -c cabal run efficient-nft-pab
-
-$ # In other console
-$ # Mint underlying CNFTs, replace "CONVERTED_CID" with the result of `ipfs` command
-$ curl --location --request POST 'localhost:3003/api/contract/activate' \
-    --header 'Content-Type: application/json' \
-    --data-raw '
-     {
-        "caID": {
-            "tag":"MintCnft",
-            "contents":[
-               {
-                  "mc'"'"'name":"Cat number 123",
-                  "mc'"'"'description":"Cat eating piece of cheese",
-                  "mc'"'"'image":"ipfs://CONVERTED_CID",
-                  "mc'"'"'tokenName":"cat-123" # This should be hex encoded (without 0x)
-               }
-            ]
-        }
-     }'
-
-$ # Go back to previous terminal and stop BPI
-$ # Replace "CURRENCY_SYMBOL" in /efficient-nft-pab/Main.hs with currency symbol from BPI log
-$ # Restart BPI, note "seabug-mint-request"
-$ nix develop -L -c cabal run efficient-nft-pab
-
-$ # Mint SeaBug NFT
-$ curl --location --request POST 'localhost:3003/api/contract/activate'
-    --header 'Content-Type: application/json' \
-    --data-raw 'INSERT_seabug-mint-request_HERE'
-
-$ cd ../cardano-transaction-lib
-$ # Replace value of "mintingPolicy1" in seabug_contracts/MintingPolicy.js with policy noted from BPI
+``` shell
+$ cd seabug
+$ scripts/upload-image.sh
+Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION>
+$ scripts/upload-image.sh 'image.jpeg' 'Title' 'Description'
 ```
+
+This will add the image to IPFS and the postgres database, and should print out something like:
+
+```
+IMAGE: image.jpeg
+TITLE: Title
+DESC: Description
+> IMAGE_HASH: 4cefddfb4f62a3c68d08863cc299a2d6411174c8ff3325d21239ad3b5dcbf21c
+> IPFS_HASH: bafkreicm57o7wt3cupdi2ceghtbjtiwwieixjsh7gms5eerzvu5v3s7sdq
+> IPFS Base36 CID: k2cwueakfq42m0c5y33czg6ces3tj9b1xlv59krz88y2r8m18e2zxee4
+```
+
+The `IPFS Base36 CID` value can be used to continue the minting process.
 
 ## Components
 
 ### `nft-marketplace`
 
 Frontend for Seabug marketplace, interacts with Cardano blockchain using `cardano-transaction-lib`.
+
+### `seabug-contract`
+
+NFT marketplace contracts in purescript. Onchain part was hardcoded as binary.
 
 ### `ogmios-datum-cache`
 
