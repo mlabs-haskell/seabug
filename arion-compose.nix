@@ -1,14 +1,25 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
+
 let
+  inherit (config) share_dir nft-storage-key;
+  inherit (pkgs.lib) mkOption;
   # The address of the marketplace script (`MarketPlace.js` in `seabug-contracts`)
   marketplace-escrow-address = "addr_test1wr05mmuhd3nvyjan9u4a7c76gj756am40qg7vuz90vnkjzczfulda";
 
-  nft-marketplace-server = (import nft-marketplace-server/default.nix).packages.x86_64-linux."nft-marketplace-server:exe:nft-marketplace-server";
-  ogmios-datum-cache = (import ogmios-datum-cache/default.nix).packages.x86_64-linux."ogmios-datum-cache";
   # FIXME: CTL version also pinned in seabug-contract. We need only one source of truth
-  cardano-transaction-lib-server = (import
-    cardano-transaction-lib/default.nix).packages.x86_64-linux."ctl-server:exe:ctl-server";
-in {
+in
+
+{
+  options = {
+    share_dir = mkOption {
+      default = "/var/lib/seabug";
+    };
+
+    nft-storage-key = mkOption {
+      default = "NFT_STORAGE_KEY_HERE";
+    };
+  };
+
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
   config.services = {
@@ -24,7 +35,8 @@ in {
       image = "nginx:1.20.2-alpine";
       ports = [ "8080:80" ];
       volumes = [
-        "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
+        # "${toString ./.}/nft-marketplace/build:/usr/share/nginx/html"
+        "${pkgs.nft-marketplace-frontend-artifacts}:/usr/share/nginx/html"
         "${toString ./.}/config/nginx/nginx.conf:/etc/nginx/nginx.conf"
         "${toString ./.}/config/nginx/conf.d:/etc/nginx/conf.d"
       ];
@@ -48,14 +60,20 @@ in {
 
     cardano-transaction-lib-server.service = {
       command =
-        [ "${cardano-transaction-lib-server}/bin/ctl-server"
-          "--port" "8081"
-          "--ogmios-host" "ogmios" "--ogmios-port" "1337"
+        # [ "${pkgs.cardano-transaction-lib-server}/bin/cardano-browser-tx-server" ];
+        [
+          "${pkgs.cardano-transaction-lib-server}/bin/ctl-server"
+          "--port"
+          "8081"
+          "--ogmios-host"
+          "ogmios"
+          "--ogmios-port"
+          "1337"
         ];
       ports = [ "8081:8081" ];
       useHostStore = true;
       volumes = [
-        "${toString ./.}/data/cardano-node/ipc:/ipc"
+        "${share_dir}/data/cardano-node/ipc:/ipc"
       ];
       restart = "always";
     };
@@ -73,21 +91,31 @@ in {
       image = "cardanosolutions/ogmios:v5.5.1-testnet";
       ports = [ "1337:1337" ];
       volumes = [
-        "${toString ./.}/data/cardano-node/ipc:/ipc"
+        "${share_dir}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/config:/config"
       ];
       restart = "always";
     };
 
     ogmios-datum-cache.service = {
-      command = [ "${ogmios-datum-cache}/bin/ogmios-datum-cache"
-                  "--db-connection" "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
-                  "--server-port" "9999"
-                  "--server-api" "usr:pwd"
-                  "--ogmios-address" "ogmios" "--ogmios-port" "1337"
-                  "--from-tip" "--use-latest"
-                  "--block-filter" "{\"address\": \"${marketplace-escrow-address}\"}"
-                ];
+      command = [
+        "${pkgs.ogmios-datum-cache}/bin/ogmios-datum-cache"
+        "--db-connection"
+        "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
+        "--server-port"
+        "9999"
+        "--server-api"
+        "usr:pwd"
+        "--ogmios-address"
+        "ogmios"
+        "--ogmios-port"
+        "1337"
+        "--from-tip"
+        "--use-latest"
+        "--block-filter"
+        # TODO: toJSON
+        "{\"address\": \"${marketplace-escrow-address}\"}"
+      ];
       depends_on = {
         ogmios.condition = "service_healthy";
         postgresql-db.condition = "service_healthy";
@@ -101,8 +129,8 @@ in {
       environment = { NETWORK = "testnet"; };
       image = "inputoutput/cardano-node:1.35.2";
       volumes = [
-        "${toString ./.}/data/cardano-node/ipc:/ipc"
-        "${toString ./.}/data/cardano-node/cardano-node-data:/data"
+        "${share_dir}/data/cardano-node/ipc:/ipc"
+        "${share_dir}/data/cardano-node/cardano-node-data:/data"
       ];
       healthcheck = {
         test = [
@@ -111,7 +139,7 @@ in {
         ];
         interval = "10s";
         timeout = "5s";
-        start_period = "15m";
+        start_period = "120m";
         retries = 3;
       };
       restart = "always";
@@ -132,19 +160,20 @@ in {
         timeout = "5s";
         retries = 3;
       };
-      volumes =
-        [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
+      volumes = [
+        "${share_dir}/data/postgres-data:/var/lib/postgresql/data"
+      ];
       restart = "always";
     };
 
     nft-marketplace-server.service = {
       image = "alpine";
       command = [
-        "${nft-marketplace-server}/bin/nft-marketplace-server"
+        "${pkgs.nft-marketplace-server}/bin/nft-marketplace-server"
         "--db-connection"
         "postgresql://seabug:seabug@postgresql-db:5432/seabug"
         "--nft-storage-key"
-        "NFT_STORAGE_KEY_HERE"
+        nft-storage-key
       ];
       depends_on = { postgresql-db.condition = "service_healthy"; };
       ports = [ "8008:9999" ];
@@ -165,7 +194,9 @@ in {
       };
       useHostStore = true;
       restart = "always";
-      volumes = [ "${toString ./.}/config/tmp:/tmp" ];
+      volumes = [
+        "${share_dir}/config/tmp:/tmp"
+      ];
     };
 
   };
