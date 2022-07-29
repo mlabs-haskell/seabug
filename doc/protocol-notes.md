@@ -1,0 +1,43 @@
+# Self-Governed NFTs Protocol Notes
+
+This document is my notes on the paper "Self-Governed NFTs on Cardano: Meta-Standard for Standards with Vertical and Horizontal Version Travel for a Decentralized Future" by Maksymilian Brodowicz, which describes the protocol used by the Seabug NFT marketplace. I wrote this because I found the paper hard to understand; this document is meant to be referenced alongside the paper to aid understanding. Also see the code [here](https://github.com/mlabs-haskell/plutus-use-cases/tree/main/mlabs/src/Mlabs/EfficientNFT) for a reference implementation of the protocol.
+
+-   Protocol involves two separate NFTs:
+    -   "Collection NFT" aka "underlying NFT": a traditional Cardano NFT to be imported to seabug
+        -   CNFT stands for collection nft
+        -   There can be multiple nfts under the same collection, i.e. tokens with the same currency symbol but different token name
+        -   Note that there can also be different nfts for the same image
+        -   The minting policy for the CNFT is also referred to as the CurrencyScript in the metadata section of the paper
+    -   "Self-governing NFT": this is minted by "the minting policy" (section 2.1 in the paper) parameterized by the collection nft's currency symbol (as well as some other things)
+        -   sgNFT stands for self-governing nft
+        -   The sgNft's token name is a hash of the current price, owner, and the CNFT's token name
+        -   For each collection nft, there can be only one sgNft corresponding to it (assuming the collection nft is actually an nft, i.e. it wasn't minted with multiple values and can't be minted again)
+-   Collection nft gets sent to the "locking script" aka "locking policy"
+-   Self-governing nft can be sent anywhere
+    -   It will most likely be sent to a validator of the nft marketplace; when it is locked by such a validator, the nft is "on the marketplace", so to speak
+    -   The sgNft can also be locked at the owner's address, which will then require their signature for any actions
+-   The minting policy is used not only to mint/burn the sgNft but also to change ownership and price
+    -   Ownership and price are changed by burning the current sgNft and minting a new one with an updated token name
+    -   The minting policy must account for the possibility that the sgNft is not locked at the owner's address:
+        -   In the case of an nft marketplace, the nft will likely be locked at the marketplace script address
+        -   Burning and changing price must explicitly require the owner's signature, so that people can't change the price of or destroy the owner's property while it is on the marketplace
+        -   Changing ownership (a purchase) does not require the owner's signature because it is assumed that the owner already gave permission for the nft to be sold when they put it on the marketplace
+-   The locking script (section 2.2) looks complicated at first but it just has some extra cases to handle due to the lockup and lockupEnd1 complication
+    -   Note: CO stands for continuing output, i.e. a utxo at this script's address
+    -   This script on its own doesn't do much, it essentially just tracks whether its corresponding sgNft is currently staked or not, and allows it to be staked/unstaked
+    -   The purpose of this script is to allow nft owners to "stake" their nfts for some externally decided rewards program, and also to allow changing protocol versions for the nft
+    -   Nfts are staked for a given "lockup" period, during which they cannot be unstaked or restaked
+    -   The lockup period is determined in two ways
+        -   If the last time the nft was staked ("entered") is before lockupEnd1, the lockup period lasts until lockupEnd1
+        -   Otherwise, the lockup period lasts until "lockup" slots after the last time the nft was staked
+    -   Restaking doesn't do anything except update the "entered" field of the datum
+    -   Unstaking deletes the NFT (sgNft and cnft)
+-   Transaction metadata is used to store various information required for recreating things like the sgNft token name and currency symbol
+    -   This helps with decentralization, as users of the protocol do not need to rely on a third-party's database to hold the information needed to interact with their nfts
+    -   The `mintPolicy` field contains the version name for the minting policy used for the transaction
+        -   The version name is an arbitrarily decided string marking the script version, for example `"myscriptv1"`
+        -   This field is used to sync the scripts used, before applying parameters
+        -   This field can be used to lookup the relevant script, apply the parameters specified by the rest of the metadata fields, and verify that the metadata is correct
+    -   The `<policy_id>` is the currency symbol of the sgNft
+    -   `marketplaceScript/Share` corresponds to the `daoScript/Share` parameters used for the minting policy
+-   Note that while the paper defines shares to be in the range of \[0, 1000\], Seabug uses the range \[0, 10000\] (see [here](https://github.com/mlabs-haskell/seabug-contracts/pull/5#discussion_r930117517))
