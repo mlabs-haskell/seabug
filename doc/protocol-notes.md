@@ -1,6 +1,6 @@
 # Self-Governed NFTs Protocol Notes
 
-This document is my notes on the paper "Self-Governed NFTs on Cardano: Meta-Standard for Standards with Vertical and Horizontal Version Travel for a Decentralized Future" by Maksymilian Brodowicz, which describes the protocol used by the Seabug NFT marketplace. I wrote this because I found the paper hard to understand; this document is meant to be referenced alongside the paper to aid understanding. Also see the code [here](https://github.com/mlabs-haskell/plutus-use-cases/tree/main/mlabs/src/Mlabs/EfficientNFT) for a reference implementation of the protocol.
+This document is my notes on the paper "Self-Governed NFTs on Cardano: Meta-Standard for Standards with Vertical and Horizontal Version Travel for a Decentralized Future" by Maksymilian Brodowicz, which describes the protocol used by the Seabug NFT marketplace. I wrote this because I found the paper hard to understand; this document is meant to be referenced alongside the paper to aid understanding. Also see the code [here](https://github.com/mlabs-haskell/seabug-onchain) for Seabug's implementation of the protocol.
 
 -   Protocol involves two separate NFTs:
     -   "Collection NFT" aka "underlying NFT": a traditional Cardano NFT to be imported to seabug
