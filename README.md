@@ -134,7 +134,9 @@ Relay node of Cardano blockchain.
 
 ### Onchain SmartContracts
 
-- [Minting policy](https://github.com/mlabs-haskell/plutus-use-cases/blob/927eade6aa9ad37bf2e9acaf8a14ae2fc304b5ba/mlabs/src/Mlabs/EfficientNFT/Token.hs)
-- [Locking script](https://github.com/mlabs-haskell/plutus-use-cases/blob/927eade6aa9ad37bf2e9acaf8a14ae2fc304b5ba/mlabs/src/Mlabs/EfficientNFT/Lock.hs)
-- [Marketplace script](https://github.com/mlabs-haskell/plutus-use-cases/blob/927eade6aa9ad37bf2e9acaf8a14ae2fc304b5ba/mlabs/src/Mlabs/EfficientNFT/Marketplace.hs)
-- [Fee collecting script](https://github.com/mlabs-haskell/plutus-use-cases/blob/927eade6aa9ad37bf2e9acaf8a14ae2fc304b5ba/mlabs/src/Mlabs/EfficientNFT/Dao.hs)
+The onchain contracts are in the following files at the relevant commit of [seabug-onchain](https://github.com/mlabs-haskell/seabug-onchain/):
+
+- [Minting policy](https://github.com/mlabs-haskell/seabug-onchain/blob/master/src/SeabugOnchain/Token.hs)
+- [Locking script](https://github.com/mlabs-haskell/seabug-onchain/blob/master/src/SeabugOnchain/Lock.hs)
+- [Marketplace script](https://github.com/mlabs-haskell/seabug-onchain/blob/master/src/SeabugOnchain/Marketplace.hs)
+- [Fee collecting script](https://github.com/mlabs-haskell/seabug-onchain/blob/master/src/SeabugOnchain/Dao.hs)

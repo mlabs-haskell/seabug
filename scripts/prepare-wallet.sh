@@ -2,20 +2,31 @@
 
 set -e
 TESTNET_MAGIC=1097911063
+WALLETS_DIR=data/wallets
 
-cd plutus-use-cases/mlabs
+mkdir -p $WALLETS_DIR
+
+pushd $WALLETS_DIR
 cardano-cli address key-gen --verification-key-file payment.vkey --signing-key-file payment.skey
 cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr --testnet-magic $TESTNET_MAGIC
 
-PHK=$(cardano-cli address key-hash --payment-verification-key-file payment.vkey)
+PKH=$(cardano-cli address key-hash --payment-verification-key-file payment.vkey)
 
-mkdir -p pab/signing-keys
-mv payment.skey pab/signing-keys/signing-key-$PHK.skey
+mv payment.skey signing-key-$PKH.skey
+
+ADDR=$(cat payment.addr)
+
+mkdir $ADDR
+
+mv payment.addr $ADDR/payment.addr
+mv payment.vkey $ADDR/payment.vkey
+mv signing-key-$PKH.skey $ADDR/signing-key-$PKH.skey
 
 echo new wallet generated:
-echo address: $(cat payment.addr)
-echo PHK: $PHK
+echo address: $ADDR
+echo PKH: $PKH
 
-echo file: $(ls payment.addr)
-echo file: $(ls payment.vkey)
-echo file: $(ls pab/signing-keys/signing-key-$PHK.skey)
+popd
+
+echo $WALLETS_DIR/$ADDR:
+echo $(ls $WALLETS_DIR/$ADDR)

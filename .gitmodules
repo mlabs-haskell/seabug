@@ -10,9 +10,9 @@
 [submodule "nft-marketplace"]
 	path = nft-marketplace
 	url = https://github.com/mlabs-haskell/nft-marketplace
-[submodule "plutus-use-cases"]
-	path = plutus-use-cases
-	url = https://github.com/mlabs-haskell/plutus-use-cases
 [submodule "seabug-contracts"]
 	path = seabug-contracts
 	url = git@github.com:mlabs-haskell/seabug-contracts.git
+[submodule "seabug-onchain"]
+	path = seabug-onchain
+	url = https://github.com/mlabs-haskell/seabug-onchain
