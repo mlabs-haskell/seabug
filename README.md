@@ -98,6 +98,29 @@ DESC: Description
 
 The `IPFS Base36 CID` value can be used to continue the minting process.
 
+## Maintenance
+
+### Updating dependencies
+
+- CTL: see [the docs](https://github.com/Plutonomicon/cardano-transaction-lib/blob/develop/doc/ctl-as-dependency.md)
+- Submodules: assuming submodules have been setup locally ([see docs](https://git-scm.com/book/en/v2/Git-Tools-Submodules)), just change to the new commit in the submodule, then stage and commit in the main `seabug` repo.
+- Purescript/JavaScript dependencies: these are managed in the submodules through the standard package management systems for the languages. For submodules using CTL (`seabug-contracts`), just be sure to follow the CTL docs to avoid conflicts in dependencies
+- Haskell dependencies: managed in [nix flakes](https://nixos.wiki/wiki/Flakes)
+- Runtime dependencies: also managed by flakes and [Arion](https://docs.hercules-ci.com/arion/)
+
+### Targeting different networks
+
+See [this PR](https://github.com/mlabs-haskell/seabug/pull/25) as an example of switching to the preview network. The general steps are:
+
+- Update the [network in arion-compose.nix](https://github.com/mlabs-haskell/seabug/blob/68cdadfcd364076be467fe2dd2de4c06d35d4f3b/arion-compose.nix#L13-16)
+- Make a blockfrost project pointing to the correct network, and update the blockfrost project ids throughout the project
+- Update the network ids throughout the project
+- Update the blockfrost api url in `seabug-contracts`
+
+### Adding new off-chain contracts
+
+See the [CTL docs](https://github.com/Plutonomicon/cardano-transaction-lib/tree/develop/doc). Off-chain contracts are stored in the `seabug-contracts` submodule.
+
 ## Components
 
 ### `nft-marketplace`
