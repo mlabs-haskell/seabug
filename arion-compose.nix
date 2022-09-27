@@ -8,7 +8,14 @@ let
   # FIXME: CTL version also pinned in seabug-contract. We need only one source of truth
   cardano-transaction-lib-server = (import
     cardano-transaction-lib/default.nix).packages.x86_64-linux."ctl-server:exe:ctl-server";
-in {
+  cardano-configurations = fetchGit { url = "https://github.com/input-output-hk/cardano-configurations"; rev = "182b16cb743867b0b24b7af92efbf427b2b09b52"; };
+  # { name = "preprod"; magic = 1; }
+  network = {
+    name = "preview";
+    magic = 2; # use `null` for mainnet
+  };
+in
+{
   # NOTE: still can't remember it...
   # ports = [ "host:container" ]
   config.services = {
@@ -48,9 +55,14 @@ in {
 
     cardano-transaction-lib-server.service = {
       command =
-        [ "${cardano-transaction-lib-server}/bin/ctl-server"
-          "--port" "8081"
-          "--ogmios-host" "ogmios" "--ogmios-port" "1337"
+        [
+          "${cardano-transaction-lib-server}/bin/ctl-server"
+          "--port"
+          "8081"
+          "--ogmios-host"
+          "ogmios"
+          "--ogmios-port"
+          "1337"
         ];
       ports = [ "8081:8081" ];
       useHostStore = true;
@@ -67,27 +79,36 @@ in {
         "--node-socket"
         "/ipc/node.socket"
         "--node-config"
-        "/config/testnet-node-config.json"
+        "/config/cardano-node/config.json"
       ];
       depends_on = { cardano-node.condition = "service_healthy"; };
-      image = "cardanosolutions/ogmios:v5.5.1-testnet";
+      image = "cardanosolutions/ogmios:v5.5.5-${network.name}";
       ports = [ "1337:1337" ];
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
-        "${toString ./.}/config:/config"
+        "${cardano-configurations}/network/${network.name}:/config"
       ];
       restart = "always";
     };
 
     ogmios-datum-cache.service = {
-      command = [ "${ogmios-datum-cache}/bin/ogmios-datum-cache"
-                  "--db-connection" "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
-                  "--server-port" "9999"
-                  "--server-api" "usr:pwd"
-                  "--ogmios-address" "ogmios" "--ogmios-port" "1337"
-                  "--from-tip" "--use-latest"
-                  "--block-filter" "{\"address\": \"${marketplace-escrow-address}\"}"
-                ];
+      command = [
+        "${ogmios-datum-cache}/bin/ogmios-datum-cache"
+        "--db-connection"
+        "host=postgresql-db port=5432 user=seabug dbname=seabug password=seabug"
+        "--server-port"
+        "9999"
+        "--server-api"
+        "usr:pwd"
+        "--ogmios-address"
+        "ogmios"
+        "--ogmios-port"
+        "1337"
+        "--from-tip"
+        "--use-latest"
+        "--block-filter"
+        "{\"address\": \"${marketplace-escrow-address}\"}"
+      ];
       depends_on = {
         ogmios.condition = "service_healthy";
         postgresql-db.condition = "service_healthy";
@@ -98,16 +119,28 @@ in {
     };
 
     cardano-node.service = {
-      environment = { NETWORK = "testnet"; };
-      image = "inputoutput/cardano-node:1.35.2";
+      image = "inputoutput/cardano-node:1.35.3";
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/data/cardano-node/cardano-node-data:/data"
+        "${cardano-configurations}/network/${network.name}/cardano-node:/config"
+        "${cardano-configurations}/network/${network.name}/genesis:/genesis"
+      ];
+      command = [
+        "run"
+        "--config"
+        "/config/config.json"
+        "--database-path"
+        "/data/db"
+        "--socket-path"
+        "/ipc/node.socket"
+        "--topology"
+        "/config/topology.json"
       ];
       healthcheck = {
         test = [
           "CMD-SHELL"
-          "CARDANO_NODE_SOCKET_PATH=/ipc/node.socket /bin/cardano-cli query tip --testnet-magic 1097911063"
+          "CARDANO_NODE_SOCKET_PATH=/ipc/node.socket /bin/cardano-cli query tip --testnet-magic ${toString network.magic}"
         ];
         interval = "10s";
         timeout = "5s";

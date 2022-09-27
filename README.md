@@ -25,7 +25,7 @@
 - arion - Provided by devshell
 - [docker](https://docs.docker.com/get-docker/)
 - [nami wallet](https://namiwallet.io/) installed as browser extension
-- Funds in wallet obtained from [faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
+- Funds in wallet obtained from [faucet](https://faucet.preview.world.dev.cardano.org/basic-faucet)
 
 ## Usage
 
@@ -68,7 +68,7 @@ Please note that `arion up` will require a full cardano node to sync, which can 
 
 Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
 
-Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
+Ensure that Nami is set to Preview, that you have some Test Ada (see [the faucet](https://faucet.preview.world.dev.cardano.org/basic-faucet)), and that you've set collateral in Nami.
 
 ### Optional: Mint your own NFTs
 
