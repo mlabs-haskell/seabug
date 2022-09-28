@@ -8,6 +8,11 @@
   * [Optional: Copy testnet node database](#optional--copy-testnet-node-database)
   * [Start services](#start-services)
   * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
+- [Maintenance](#maintenance)
+  * [Updating dependencies](#updating-dependencies)
+  * [Targeting different networks](#targeting-different-networks)
+  * [Adding new off-chain contracts](#adding-new-off-chain-contracts)
+  * [Known errors](#known-errors)
 - [Components](#components)
   * [`nft-marketplace`](#-nft-marketplace-)
   * [`ogmios-datum-cache`](#-ogmios-datum-cache-)
@@ -120,6 +125,14 @@ See [this PR](https://github.com/mlabs-haskell/seabug/pull/25) as an example of 
 ### Adding new off-chain contracts
 
 See the [CTL docs](https://github.com/Plutonomicon/cardano-transaction-lib/tree/develop/doc). Off-chain contracts are stored in the `seabug-contracts` submodule.
+
+### Known errors
+
+> WebSocket connection to ws://localho.st:9999/ws failed: WebSocket is closed before the connection is established
+> Error: [object Object]
+> at push.../seabug-contracts/output.js.exports.error
+
+Try waiting a bit and reloading the page. Likely just ODC needing some time to start up.
 
 ## Components
 
