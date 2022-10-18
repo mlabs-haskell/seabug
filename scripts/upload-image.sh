@@ -1,5 +1,3 @@
-set -e
-
 if [ $# != 3 ]; then
     echo "Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION>"
     exit 1
@@ -15,14 +13,13 @@ echo DESC: $DESC
 
 # enviroment variables
 SEABUG_ADMIN_TOKEN=ADMIN_TOKEN
-export PGPASSWORD=seabug
 
 ############################################################
 # Prepare
 ############################################################
 
-# Setup server admin token, password: seabug
-psql -U seabug -h localhost -q -c "INSERT INTO admin_token(token) VALUES ('$SEABUG_ADMIN_TOKEN') ON CONFLICT DO NOTHING"
+# Setup server admin token
+sudo -u nft-marketplace-server psql -q -c "INSERT INTO admin_token(token) VALUES ('$SEABUG_ADMIN_TOKEN') ON CONFLICT DO NOTHING"
 
 ############################################################
 # Functions
@@ -57,4 +54,4 @@ echo '>' IMAGE_HASH: $IMAGE_HASH
 IPFS_HASH=$(get_ipfs_hash $IMAGE_HASH)
 echo '>' IPFS_HASH: $IPFS_HASH
 export IPFS_CID=$(ipfs cid format -b base36 $IPFS_HASH)
-echo '>' IPFS Base36 CID: $IPFS_CID
+echo '>' IPFS Base36 CID: "$IPFS_CID"

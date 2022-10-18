@@ -1,6 +1,3 @@
-#!/bin/bash
-
-set -e
 TESTNET_MAGIC=1097911063
 
 cd plutus-use-cases/mlabs
