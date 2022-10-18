@@ -32,15 +32,18 @@
 ### Clone repo
 
 ```shell
-$ git clone --recurse-submodules git@github.com:mlabs-haskell/seabug.git
+git clone --recurse-submodules git@github.com:mlabs-haskell/seabug.git
+cd seabug
 ```
 
 ### Enter nix shell
 
 ```shell
-$ nix develop --extra-experimental-features nix-command --extra-experimental-features flakes
+nix develop --extra-experimental-features nix-command --extra-experimental-features flakes
 ```
-From now, execute every command in devshell dropped by `nix develop`
+From now, execute every command in the devshell created by the above command.
+
+Note: if you run into a permission error when executing the above command, you may need to run `sudo chmod 777 -R /nix`, then run the above command again. Be aware that more restrictive file permissions may be safer.
 
 ### Setup `nft.storage` key
 
@@ -50,15 +53,15 @@ Replace `NFT_STORAGE_KEY_HERE` in `arion-compose.nix` with your key. You can obt
 
 If you have node db you can copy it to `data/cardano-node/cardano-node-data` to save hours on initial sync.
 ```shell
-$ mkdir -p data/cardano-node/cardano-node-data
-$ cp -r /path/to/old/db data/cardano-node/cardano-node-data/.
+mkdir -p data/cardano-node/cardano-node-data
+cp -r /path/to/old/db data/cardano-node/cardano-node-data/.
 ```
 
 ### Start services
 
 ```shell
-$ ./buildFrontend.sh
-$ arion up
+./buildFrontend.sh
+arion up
 ```
 
 Please note that `arion up` will require a full cardano node to sync, which can take some time.  At time of writing (April, 2022), the current tip is at slot 56000000 and counting.
@@ -76,10 +79,10 @@ See the minting section in `seabug-contracts/README.md`. The following section d
 If you have an image:
 
 ``` shell
-$ cd seabug
-$ scripts/upload-image.sh
+cd seabug
+scripts/upload-image.sh
 Arguments: <IMAGE_FILE> <TITLE> <DESCRIPTION>
-$ scripts/upload-image.sh 'image.jpeg' 'Title' 'Description'
+scripts/upload-image.sh 'image.jpeg' 'Title' 'Description'
 ```
 
 This will add the image to IPFS and the postgres database, and should print out something like:
