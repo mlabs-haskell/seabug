@@ -41,17 +41,17 @@
     (writeScriptBin "upload-image" (builtins.readFile ../scripts/upload-image.sh))
   ];
 
-# environment.systemPackages = with pkgs; [
-#     (writeShellApplication {
-#       name = "upload-image";
-#       text = builtins.readFile ../scripts/upload-image.sh;
-#       runtimeInputs = [
-#         ipfs
-#         jq
-#         python310Packages.httpie
-#         ripgrep
-#       ];
-#     })
-#   ];
+  # environment.systemPackages = with pkgs; [
+  #     (writeShellApplication {
+  #       name = "upload-image";
+  #       text = builtins.readFile ../scripts/upload-image.sh;
+  #       runtimeInputs = [
+  #         ipfs
+  #         jq
+  #         python310Packages.httpie
+  #         ripgrep
+  #       ];
+  #     })
+  #   ];
 
 }

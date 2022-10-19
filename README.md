@@ -8,6 +8,11 @@
   * [Optional: Copy testnet node database](#optional--copy-testnet-node-database)
   * [Start services](#start-services)
   * [Optional: Mint your own NFTs](#optional--mint-your-own-nfts)
+- [Maintenance](#maintenance)
+  * [Updating dependencies](#updating-dependencies)
+  * [Targeting different networks](#targeting-different-networks)
+  * [Adding new off-chain contracts](#adding-new-off-chain-contracts)
+  * [Known errors](#known-errors)
 - [Components](#components)
   * [`nft-marketplace`](#-nft-marketplace-)
   * [`ogmios-datum-cache`](#-ogmios-datum-cache-)
@@ -25,7 +30,7 @@
 - arion - Provided by devshell
 - [docker](https://docs.docker.com/get-docker/)
 - [nami wallet](https://namiwallet.io/) installed as browser extension
-- Funds in wallet obtained from [faucet](https://testnets.cardano.org/en/testnets/cardano/tools/faucet/)
+- Funds in wallet obtained from [faucet](https://faucet.preview.world.dev.cardano.org/basic-faucet)
 
 ## Usage
 
@@ -68,7 +73,7 @@ Please note that `arion up` will require a full cardano node to sync, which can 
 
 Once the chain is synced, you should be able to view the dApp UI from `localhost:8080`
 
-Ensure that Nami is set to Testnet, that you have some Test Ada, and that you've set collateral in Nami.
+Ensure that Nami is set to Preview, that you have some Test Ada (see [the faucet](https://faucet.preview.world.dev.cardano.org/basic-faucet)), and that you've set collateral in Nami.
 
 ### Optional: Mint your own NFTs
 
@@ -97,6 +102,37 @@ DESC: Description
 ```
 
 The `IPFS Base36 CID` value can be used to continue the minting process.
+
+## Maintenance
+
+### Updating dependencies
+
+- CTL: see [the docs](https://github.com/Plutonomicon/cardano-transaction-lib/blob/develop/doc/ctl-as-dependency.md)
+- Submodules: assuming submodules have been setup locally ([see docs](https://git-scm.com/book/en/v2/Git-Tools-Submodules)), just change to the new commit in the submodule, then stage and commit in the main `seabug` repo.
+- Purescript/JavaScript dependencies: these are managed in the submodules through the standard package management systems for the languages. For submodules using CTL (`seabug-contracts`), just be sure to follow the CTL docs to avoid conflicts in dependencies
+- Haskell dependencies: managed in [nix flakes](https://nixos.wiki/wiki/Flakes)
+- Runtime dependencies: also managed by flakes and [Arion](https://docs.hercules-ci.com/arion/)
+
+### Targeting different networks
+
+See [this PR](https://github.com/mlabs-haskell/seabug/pull/25) as an example of switching to the preview network. The general steps are:
+
+- Update the [network in arion-compose.nix](https://github.com/mlabs-haskell/seabug/blob/68cdadfcd364076be467fe2dd2de4c06d35d4f3b/arion-compose.nix#L13-16)
+- Make a blockfrost project pointing to the correct network, and update the blockfrost project ids throughout the project
+- Update the network ids throughout the project
+- Update the blockfrost api url in `seabug-contracts`
+
+### Adding new off-chain contracts
+
+See the [CTL docs](https://github.com/Plutonomicon/cardano-transaction-lib/tree/develop/doc). Off-chain contracts are stored in the `seabug-contracts` submodule.
+
+### Known errors
+
+> WebSocket connection to ws://localho.st:9999/ws failed: WebSocket is closed before the connection is established
+> Error: [object Object]
+> at push.../seabug-contracts/output.js.exports.error
+
+Try waiting a bit and reloading the page. Likely just ODC needing some time to start up.
 
 ## Components
 

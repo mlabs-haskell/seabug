@@ -1,4 +1,7 @@
-TESTNET_MAGIC=1097911063
+#!/bin/bash
+
+set -e
+TESTNET_MAGIC=2
 
 cd plutus-use-cases/mlabs
 cardano-cli address key-gen --verification-key-file payment.vkey --signing-key-file payment.skey
