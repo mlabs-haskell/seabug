@@ -4,19 +4,16 @@
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
 
-    # TODO change after it's merged
-    nft-marketplace-frontend.url = "/home/ccr/mlabs/nft-marketplace"; # github:mlabs-haskell/nft-marketplace/aciceri/nix;
+    # TODO change after they are merged
+    nft-marketplace-frontend.url = github:mlabs-haskell/nft-marketplace/aciceri/contract-updates-and-nix;
 
-    nft-marketplace-server.url = "/home/ccr/mlabs/nft-marketplace-server"; # github:mlabs-haskell/nft-marketplace-server;
-
-    seabug-contracts.url = github:mlabs-haskell/seabug-contracts/23f49cf05d6230a8c1f63924ac9e61d1e1c0d5a8;
+    nft-marketplace-server.url = github:mlabs-haskell/nft-marketplace-server/aciceri/nix;
   };
   outputs =
     { self
     , nixpkgs
     , nft-marketplace-frontend
     , nft-marketplace-server
-    , seabug-contracts
     } @ inputs:
     let
       supportedSystems = [ "x86_64-linux" "x86_64-darwin" ];
