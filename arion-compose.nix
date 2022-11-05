@@ -8,7 +8,7 @@ let
   # FIXME: CTL version also pinned in seabug-contract. We need only one source of truth
   cardano-transaction-lib-server = (import
     cardano-transaction-lib/default.nix).packages.x86_64-linux."ctl-server:exe:ctl-server";
-  cardano-configurations = fetchGit { url = "https://github.com/input-output-hk/cardano-configurations"; rev = "182b16cb743867b0b24b7af92efbf427b2b09b52"; };
+  cardano-configurations = fetchGit { url = "https://github.com/input-output-hk/cardano-configurations"; rev = "c0d11b5ff0c0200da00a50c17c38d9fd752ba532"; };
   # { name = "preprod"; magic = 1; }
   network = {
     name = "preview";
@@ -111,7 +111,7 @@ in
     };
 
     cardano-node.service = {
-      image = "inputoutput/cardano-node:1.35.3";
+      image = "inputoutput/cardano-node:1.35.4-rc1";
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
         "${toString ./.}/data/cardano-node/cardano-node-data:/data"
