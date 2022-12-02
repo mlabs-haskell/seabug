@@ -12,6 +12,9 @@
 
   seabug.enable = true;
 
+  # this is needed to trigger `seabug.frontend` package build
+  services.nginx.enable = true;
+
   virtualisation = {
     memorySize = 8192;
     diskSize = 100000;

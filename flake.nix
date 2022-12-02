@@ -27,13 +27,14 @@
     {
       nixosModules = {
         seabug = {
-          imports = [
-            inputs.nft-marketplace-frontend.nixosModules.nft-marketplace-frontend
-            inputs.nft-marketplace-server.nixosModules.nft-marketplace-server
+          imports = with inputs; [
+            nft-marketplace-server.nixosModules.nft-marketplace-server
             ./nix/seabug.nix
+            ({pkgs, ...}: {
+              seabug.frontend-maker = nft-marketplace-frontend.lib.make-frontend "x86_64-linux";
+            })
           ];
           nixpkgs.overlays = with inputs; [
-            nft-marketplace-frontend.overlays.nft-marketplace-frontend
             nft-marketplace-server.overlays.nft-marketplace-server
           ];
         };
