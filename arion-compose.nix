@@ -61,7 +61,7 @@ in
       volumes = [
         "${toString ./.}/data/cardano-node/ipc:/ipc"
       ];
-      restart = "always";
+      restart = "on-failure";
     };
 
     ogmios.service = {
@@ -80,7 +80,7 @@ in
         "${toString ./.}/data/cardano-node/ipc:/ipc"
         "${cardano-configurations}/network/${network.name}:/config"
       ];
-      restart = "always";
+      restart = "on-failure";
     };
 
     ogmios-datum-cache.service = {
@@ -107,7 +107,7 @@ in
       };
       ports = [ "9999:9999" ];
       useHostStore = true;
-      restart = "always";
+      restart = "on-failure";
     };
 
     cardano-node.service = {
@@ -139,7 +139,7 @@ in
         start_period = "15m";
         retries = 3;
       };
-      restart = "always";
+      restart = "on-failure";
     };
 
     postgresql-db.service = {
@@ -159,7 +159,7 @@ in
       };
       volumes =
         [ "${toString ./.}/data/postgres-data:/var/lib/postgresql/data" ];
-      restart = "always";
+      restart = "on-failure";
     };
 
     nft-marketplace-server.service = {
@@ -189,7 +189,7 @@ in
         retries = 3;
       };
       useHostStore = true;
-      restart = "always";
+      restart = "on-failure";
       volumes = [ "${toString ./.}/config/tmp:/tmp" ];
     };
 
