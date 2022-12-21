@@ -678,17 +678,17 @@
         "servant-purescript": "servant-purescript_2"
       },
       "locked": {
-        "lastModified": 1661841189,
-        "narHash": "sha256-Tnnxm4r36xZZFEG37K+CRCXNwJ4DTAj1Iw+3IsBNzKg=",
+        "lastModified": 1670614691,
+        "narHash": "sha256-mmHphmG8zbPSLjNgKn4fi9DcQ5CFz/mnjyODzwB8vhY=",
         "owner": "Plutonomicon",
         "repo": "cardano-transaction-lib",
-        "rev": "09540ea3915be20e5095b3b6f2418ddd712eb58e",
+        "rev": "55c9ec24286c87c9caf2aa28a618200a26428a68",
         "type": "github"
       },
       "original": {
         "owner": "Plutonomicon",
         "repo": "cardano-transaction-lib",
-        "rev": "09540ea3915be20e5095b3b6f2418ddd712eb58e",
+        "rev": "55c9ec24286c87c9caf2aa28a618200a26428a68",
         "type": "github"
       }
     },
@@ -1017,6 +1017,21 @@
     },
     "flake-utils_2": {
       "locked": {
+        "lastModified": 1652776076,
+        "narHash": "sha256-gzTw/v1vj4dOVbpBSJX4J0DwUR6LIyXo7/SuuTJp1kM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "04c1b180862888302ddfb2e3ad9eaa63afc60cf8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_3": {
+      "locked": {
         "lastModified": 1644229661,
         "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
         "owner": "numtide",
@@ -1297,7 +1312,7 @@
         "cabal-34": "cabal-34_2",
         "cabal-36": "cabal-36_2",
         "cardano-shell": "cardano-shell_2",
-        "flake-utils": "flake-utils_2",
+        "flake-utils": "flake-utils_3",
         "ghc-8.6.5-iohk": "ghc-8.6.5-iohk_2",
         "hackage": "hackage_2",
         "hpc-coveralls": "hpc-coveralls_2",
@@ -1705,21 +1720,21 @@
       "inputs": {
         "dream2nix": "dream2nix",
         "nixpkgs": "nixpkgs",
-        "seabug-contracts": "seabug-contracts"
+        "seabug-contracts": "seabug-contracts",
+        "styleguide": "styleguide"
       },
       "locked": {
-        "lastModified": 1666953995,
-        "narHash": "sha256-7lKSNGx0ugAaxOV+ObTSNiRRKQZ/oTe3y1cPruxMUwk=",
-        "owner": "mlabs-haskell",
-        "repo": "nft-marketplace",
-        "rev": "2d3a291b506e05bd655ecb5d5ac3d858a0c1fd64",
-        "type": "github"
+        "lastModified": 1671641653,
+        "narHash": "sha256-HlKb6L5qZ+IhaeNgaklhZGdwFLendo7ltuhcZQKHdAM=",
+        "ref": "refs/heads/main",
+        "rev": "8f9956ad3ed7ad16fa0cf6e9ab5081e62a14bf0c",
+        "revCount": 426,
+        "type": "git",
+        "url": "file:///home/ccr/mlabs/nft-marketplace"
       },
       "original": {
-        "owner": "mlabs-haskell",
-        "ref": "aciceri/contract-updates-and-nix",
-        "repo": "nft-marketplace",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/ccr/mlabs/nft-marketplace"
       }
     },
     "nft-marketplace-server": {
@@ -1734,11 +1749,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1665994962,
-        "narHash": "sha256-EKMk1V1KyjQgp1DnObIGp+KJeGs0YcIK0NEDzWyoTzQ=",
+        "lastModified": 1669976201,
+        "narHash": "sha256-sIACIdgpl/7/BKiNhsErGyqIUiEyI15kUUduwyyaQTU=",
         "owner": "mlabs-haskell",
         "repo": "nft-marketplace-server",
-        "rev": "c450a178781f7c382fb5d4a26be64d66868afdb8",
+        "rev": "ec966401c8c0a0cc116acf67f2168b6238cbcaf0",
         "type": "github"
       },
       "original": {
@@ -1804,7 +1819,7 @@
     "nix_2": {
       "inputs": {
         "lowdown-src": "lowdown-src_2",
-        "nixpkgs": "nixpkgs_6",
+        "nixpkgs": "nixpkgs_7",
         "nixpkgs-regression": "nixpkgs-regression_2"
       },
       "locked": {
@@ -1824,15 +1839,15 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1658015103,
-        "narHash": "sha256-mO+23f3SO+fBzEvbxRe6GkSB5Xp43CT2sV8Rs8MYdz8=",
-        "owner": "NixOs",
+        "lastModified": 1668087632,
+        "narHash": "sha256-T/cUx44aYDuLMFfaiVpMdTjL4kpG7bh0VkN6JEM78/E=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "8f485713f5e6b6883a9b6959afa98688360a3ecb",
+        "rev": "5f588eb4a958f1a526ed8da02d6ea1bea0047b9f",
         "type": "github"
       },
       "original": {
-        "owner": "NixOs",
+        "owner": "NixOS",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
@@ -2055,6 +2070,21 @@
     },
     "nixpkgs_6": {
       "locked": {
+        "lastModified": 1652969555,
+        "narHash": "sha256-F+yPkuCudylgJvTIogiw6833Iis5tgFsVMMBisldS6s=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "00e9d7ab7a184d23027ee994771904d69dcc7c07",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_7": {
+      "locked": {
         "lastModified": 1632864508,
         "narHash": "sha256-d127FIvGR41XbVRDPVvozUPQ/uRHbHwvfyKHwEt5xFM=",
         "owner": "NixOS",
@@ -2068,7 +2098,7 @@
         "type": "indirect"
       }
     },
-    "nixpkgs_7": {
+    "nixpkgs_8": {
       "locked": {
         "lastModified": 1665259268,
         "narHash": "sha256-ONFhHBLv5nZKhwV/F2GOH16197PbvpyWhoO0AOyktkU=",
@@ -2520,7 +2550,7 @@
       "inputs": {
         "nft-marketplace-frontend": "nft-marketplace-frontend",
         "nft-marketplace-server": "nft-marketplace-server",
-        "nixpkgs": "nixpkgs_7"
+        "nixpkgs": "nixpkgs_8"
       }
     },
     "seabug-contracts": {
@@ -2535,11 +2565,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1666900950,
-        "narHash": "sha256-eULe5paW7QsZLAUVTSXHY6X0xRvcapANelSd+jYBNeg=",
+        "lastModified": 1670629796,
+        "narHash": "sha256-0TYGM9IzB7nzJO0IVsyUA3ujDw58oFJVGWjJ3o9yetU=",
         "owner": "mlabs-haskell",
         "repo": "seabug-contracts",
-        "rev": "9821a894f31b6834e785257bf5a92a4bbf96b04f",
+        "rev": "f8f4b651d8adc5776ed48cbe990f7ab0377d6d43",
         "type": "github"
       },
       "original": {
@@ -2612,6 +2642,25 @@
       "original": {
         "owner": "input-output-hk",
         "repo": "stackage.nix",
+        "type": "github"
+      }
+    },
+    "styleguide": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_6"
+      },
+      "locked": {
+        "lastModified": 1663873358,
+        "narHash": "sha256-LvzPUF1oMhH3xXRyMirfKurfg4AmjLUUpufxhs5nycM=",
+        "owner": "mlabs-haskell",
+        "repo": "styleguide",
+        "rev": "5a451f05f417aeb6eda65ebb1c94f77698d85ded",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mlabs-haskell",
+        "repo": "styleguide",
         "type": "github"
       }
     },

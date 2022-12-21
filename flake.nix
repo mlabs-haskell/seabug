@@ -2,12 +2,14 @@
   description = "Seabug";
 
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # TODO change after they are merged
-    nft-marketplace-frontend.url = github:mlabs-haskell/nft-marketplace/aciceri/contract-updates-and-nix;
+    nft-marketplace-frontend.url = "/home/ccr/mlabs/nft-marketplace";
+    # nft-marketplace-frontend.url = "github:mlabs-haskell/nft-marketplace/marton/flake";
 
-    nft-marketplace-server.url = github:mlabs-haskell/nft-marketplace-server/aciceri/nix;
+    # nft-marketplace-server.url = "/home/ccr/mlabs/nft-marketplace-server";
+    nft-marketplace-server.url = "github:mlabs-haskell/nft-marketplace-server/aciceri/nix";
   };
   outputs =
     { self
