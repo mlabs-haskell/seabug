@@ -1724,17 +1724,17 @@
         "styleguide": "styleguide"
       },
       "locked": {
-        "lastModified": 1671641653,
-        "narHash": "sha256-HlKb6L5qZ+IhaeNgaklhZGdwFLendo7ltuhcZQKHdAM=",
-        "ref": "refs/heads/main",
-        "rev": "8f9956ad3ed7ad16fa0cf6e9ab5081e62a14bf0c",
-        "revCount": 426,
-        "type": "git",
-        "url": "file:///home/ccr/mlabs/nft-marketplace"
+        "lastModified": 1671644079,
+        "narHash": "sha256-WPzJzTP1RwBas44p2BNOZXMwc6skd/Pg3CAFT0Lsdnc=",
+        "owner": "mlabs-haskell",
+        "repo": "nft-marketplace",
+        "rev": "094d08685d79830d670d8c3fa63cb38d70e0c3fa",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/ccr/mlabs/nft-marketplace"
+        "owner": "mlabs-haskell",
+        "repo": "nft-marketplace",
+        "type": "github"
       }
     },
     "nft-marketplace-server": {

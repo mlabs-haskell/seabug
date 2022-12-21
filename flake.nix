@@ -5,10 +5,9 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # TODO change after they are merged
-    nft-marketplace-frontend.url = "/home/ccr/mlabs/nft-marketplace";
-    # nft-marketplace-frontend.url = "github:mlabs-haskell/nft-marketplace/marton/flake";
+    nft-marketplace-frontend.url = "github:mlabs-haskell/nft-marketplace";
 
-    # nft-marketplace-server.url = "/home/ccr/mlabs/nft-marketplace-server";
+    # TODO change after they are merged
     nft-marketplace-server.url = "github:mlabs-haskell/nft-marketplace-server/aciceri/nix";
   };
   outputs =
