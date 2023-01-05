@@ -4,3 +4,4 @@ result*
 /node_modules
 /.node-cfg/
 nixos.qcow2
+pab

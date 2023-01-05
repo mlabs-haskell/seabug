@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 set -e
 TESTNET_MAGIC=2
